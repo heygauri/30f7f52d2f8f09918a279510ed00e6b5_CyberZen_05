@@ -41,7 +41,7 @@ Incorporating an HTML form for user feedback to enhance the extension’s accura
 
 ## Schedule
 
-![Schedule](images/schedule.png)
+![Schedule](images/schedule.PNG)
 
 ---
 
