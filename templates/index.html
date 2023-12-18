@@ -1,0 +1,63 @@
+<!-- templates/index.html -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Website Analyzer</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            background-color: #f8f9fa;
+            color: #343a40;
+        }
+
+        .container {
+            margin-top: 50px;
+        }
+
+        h1 {
+            color: #007bff;
+        }
+
+        #urlInput {
+            width: 80%;
+        }
+
+        #urlHelp {
+            color: #6c757d;
+        }
+
+        #resultContainer {
+            margin-top: 20px;
+        }
+
+        #resultText {
+            color: #28a745;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="mb-4">Website Analyzer</h1>
+        <form id="urlForm">
+            <div class="form-group">
+                <label for="urlInput">Enter URL:</label>
+                <input type="url" class="form-control" id="urlInput" placeholder="https://example.com" required>
+                <small id="urlHelp" class="form-text text-muted">Please enter a valid URL.</small>
+            </div>
+            <button type="submit" class="btn btn-primary">Analyze</button>
+        </form>
+    </div>
+
+    <div id="resultContainer" class="container mt-4" style="display: none;">
+        <h2>Analysis Result</h2>
+        <p id="resultText"></p>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs"></script>
+    <script src="main.js"></script>
+</body>
+</html>
