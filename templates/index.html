@@ -52,12 +52,40 @@
     </div>
 
     <div id="resultContainer" class="container mt-4" style="display: none;">
-        <h2>Analysis Result</h2>
-        <p id="resultText"></p>
+        <h1>Analysis Result</h1>
+
+        <h2>URL</h2>
+        <p class="url">{{ analysis_result.Url }}</p>
+
+        <h2>SSL Information</h2>
+        <p class="ssl_info">
+            {% if analysis_result['SSL Info'] %}
+                {% for key, value in analysis_result['SSL Info'].items() %}
+                    {{ key }}: {% if value is none %}N/A{% else %}{{ value }}{% endif %}<br>
+                {% endfor %}
+            {% else %}
+                N/A
+            {% endif %}
+        </p>
+    
+
+        <h2>Is Domain Legitimate?</h2>
+        <p class="isDomainLegitimate">{{ analysis_result['Is Domain Legitimate'] }}</p>
+
+        <h2>Is Certificate Valid?</h2>
+        <p class="isCertificateValid">{{ analysis_result['Is Certificate Valid'] }}</p>
+
+        <h2>Is HTTPS?</h2>
+        <p class="isHttps">{{ analysis_result['Is HTTPS'] }}</p>
+
+        <h2>ML Model Prediction</h2>
+        <pre class="mlResultText">{{ analysis_result['ML Result'] | tojson(indent=2) }}</pre>
+
     </div>
 
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs"></script>
     <script src="main.js"></script>
 </body>
 </html>
+
