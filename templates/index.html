@@ -36,6 +36,23 @@
         #resultText {
             color: #28a745;
         }
+        .ssl-info-table tr {
+        margin-bottom: 10px;
+        }
+
+        /* Style the table */
+        .ssl-info-table th, .ssl-info-table td {
+            padding: 8px;
+            border: 1px solid #ddd;
+        }
+
+        .ssl-info-table th {
+            background-color: #f2f2f2;
+        }
+
+        .ssl-info-table td {
+            background-color: #fff;
+        }
     </style>
 </head>
 <body>
@@ -55,31 +72,95 @@
         <h1>Analysis Result</h1>
 
         <h2>URL</h2>
-        <p class="url">{{ analysis_result.Url }}</p>
+        <p class="url"></p>
 
         <h2>SSL Information</h2>
-        <p class="ssl_info">
-            {% if analysis_result['SSL Info'] %}
-                {% for key, value in analysis_result['SSL Info'].items() %}
-                    {{ key }}: {% if value is none %}N/A{% else %}{{ value }}{% endif %}<br>
-                {% endfor %}
-            {% else %}
-                N/A
-            {% endif %}
-        </p>
-    
+        <table class="ssl-info-table">
+            <tbody>
+                <tr>
+                    <th>Country</th>
+                    <td class="ssl-info-country"></td>
+                </tr>
+                <tr>
+                    <th>Creation Date</th>
+                    <td class="ssl-info-creation-date"></td>
+                </tr>
+                <tr>
+                    <th>DNSSEC</th>
+                    <td class="ssl-info-dnssec"></td>
+                </tr>
+                <tr>
+                    <th>Domain Name</th>
+                    <td class="ssl-info-domain-name"></td>
+                </tr>
+                <tr>
+                    <th>Emails</th>
+                    <td class="ssl-info-emails"></td>
+                </tr>
+                <tr>
+                    <th>Expiration Date</th>
+                    <td class="ssl-info-expiration-date"></td>
+                </tr>
+                <tr>
+                    <th>Name Servers</th>
+                    <td class="ssl-info-name-servers"></td>
+                </tr>
+                <tr>
+                    <th>Organization</th>
+                    <td class="ssl-info-organization"></td>
+                </tr>
+                <tr>
+                    <th>Registrar</th>
+                    <td class="ssl-info-registrar"></td>
+                </tr>
+                <tr>
+                    <th>Registrar IANA</th>
+                    <td class="ssl-info-registrar-iana"></td>
+                </tr>
+                <tr>
+                    <th>Registrar URL</th>
+                    <td class="ssl-info-registrar-url"></td>
+                </tr>
+                <tr>
+                    <th>State</th>
+                    <td class="ssl-info-state"></td>
+                </tr>
+                <tr>
+                    <th>Status</th>
+                    <td class="ssl-info-status"></td>
+                </tr>
+                <tr>
+                    <th>Updated Date</th>
+                    <td class="ssl-info-updated-date"></td>
+                </tr>
+                <tr>
+                    <th>Protocol</th>
+                    <td class="ssl-info-protocol"></td>
+                </tr>
+                <tr>
+                    <th>Valid From</th>
+                    <td class="ssl-info-valid-from"></td>
+                </tr>
+                <tr>
+                    <th>Valid Until</th>
+                    <td class="ssl-info-valid-until"></td>
+                </tr>
+            </tbody>
+        </table>
 
         <h2>Is Domain Legitimate?</h2>
-        <p class="isDomainLegitimate">{{ analysis_result['Is Domain Legitimate'] }}</p>
+        <p class="isDomainLegitimate"></p>
 
         <h2>Is Certificate Valid?</h2>
-        <p class="isCertificateValid">{{ analysis_result['Is Certificate Valid'] }}</p>
+        <p class="isCertificateValid"></p>
 
         <h2>Is HTTPS?</h2>
-        <p class="isHttps">{{ analysis_result['Is HTTPS'] }}</p>
+        <p class="isHttps"></p>
 
         <h2>ML Model Prediction</h2>
-        <pre class="mlResultText">{{ analysis_result['ML Result'] | tojson(indent=2) }}</pre>
+        <pre class="mlResultText"></pre>
+    </div>
+
 
     </div>
 

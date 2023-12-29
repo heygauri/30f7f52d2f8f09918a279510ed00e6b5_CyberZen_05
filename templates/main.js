@@ -26,6 +26,7 @@ function analyzeWebsite(url) {
         url: 'http://127.0.0.1:5000/analyze',
         data: {url: url},
         success: function(response) {
+            //console.log(response);
             displayResult(response);
         },
         error: function(error) {
@@ -38,29 +39,47 @@ function analyzeWebsite(url) {
 function displayResult(result) {
     console.log(result);
 
-    // Ensure that url, ssl_info, is_domain_legitimate, is_certificate_valid, is_https, and ml_result properties exist in the result object
-    const url = result.Url;
-    const sslInfoText = JSON.stringify(result['SSL Info']);
-    const isDomainLegitimate = result['Is Domain Legitimate'];
-    const isCertificateValid = result['Is Certificate Valid'];
-    const isHttps = result['Is HTTPS'];
-    const mlResultText = JSON.stringify(result['ML Result']);
+    // Check if 'SSL Info' property exists
+    if (result['SSL Info']) {
+        // Extract 'SSL Info' from the result
+        const sslInfo = result['SSL Info'];
 
-    console.log(result.Url);
-    console.log(result['SSL Info']);
-    console.log(result['Is Domain Legitimate']);
-    console.log(result['Is Certificate Valid']);
-    console.log(result['Is HTTPS']);
-    console.log(result['ML Result']);
+        // Check if 'Domain Info' property exists
+        if (sslInfo['Domain Info']) {
+            const domainInfo = sslInfo['Domain Info'];
 
-    // Update the HTML content of each element
-    $('.url').text(url);
-    $('.sslInfoText').text(sslInfoText);
-    $('.isDomainLegitimate').text(isDomainLegitimate);
-    $('.isCertificateValid').text(isCertificateValid);
-    $('.isHttps').text(isHttps);
-    $('.mlResultText').text(mlResultText);
+            // Update the HTML content of the SSL Information table
+            $('.ssl-info-country').text(domainInfo['country'] || 'N/A');
+            $('.ssl-info-creation-date').text(domainInfo['creation_date'] || 'N/A');
+            $('.ssl-info-dnssec').text(domainInfo['dnssec'] || 'N/A');
+            $('.ssl-info-domain-name').text(domainInfo['domain_name'] || 'N/A');
+            $('.ssl-info-emails').text(domainInfo['emails'] || 'N/A');
+            $('.ssl-info-expiration-date').text(domainInfo['expiration_date'] || 'N/A');
+            $('.ssl-info-name-servers').text(domainInfo['name_servers'] ? domainInfo['name_servers'].join(', ') : 'N/A');
+            $('.ssl-info-organization').text(domainInfo['organization'] || 'N/A');
+            $('.ssl-info-registrar').text(domainInfo['registrar'] || 'N/A');
+            $('.ssl-info-registrar-iana').text(domainInfo['registrar_iana'] || 'N/A');
+            $('.ssl-info-registrar-url').text(domainInfo['registrar_url'] || 'N/A');
+            $('.ssl-info-state').text(domainInfo['state'] || 'N/A');
+            $('.ssl-info-status').text(domainInfo['status'] || 'N/A');
+            $('.ssl-info-updated-date').text(domainInfo['updated_date'] || 'N/A');
+        }
+
+        // Update other HTML content as needed
+        $('.ssl-info-protocol').text(sslInfo['Protocol'] || 'N/A');
+        $('.ssl-info-valid-from').text(sslInfo['Valid From'] || 'N/A');
+        $('.ssl-info-valid-until').text(sslInfo['Valid Until'] || 'N/A');
+    }
+
+    // Update other HTML content as needed
+    $('.url').text(result.Url || 'N/A');
+    $('.isDomainLegitimate').text(result['Is Domain Legitimate']);
+    $('.isCertificateValid').text(result['Is Certificate Valid']);
+    $('.isHttps').text(result['Is HTTPS']);
+    $('.mlResultText').text(JSON.stringify(result['URL Analyzer Result'], null, 2));
     $('#resultContainer').show();
 }
+
+
 
 
