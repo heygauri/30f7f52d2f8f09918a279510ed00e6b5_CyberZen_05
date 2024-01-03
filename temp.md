@@ -33,7 +33,7 @@ A web application for analyzing websites. It checks the legitimacy of the domain
 - [TensorFlow.js](https://www.tensorflow.org/js) for machine learning predictions
 - [Selenium](https://www.selenium.dev/) for web scraping
 - [Beautiful Soup](https://www.crummy.com/software/BeautifulSoup/) for HTML parsing
-- [Chromium-Chrome driver] for automated browsing
+- Chromium-Chrome driver for automated browsing
 
 ## Installation
 
