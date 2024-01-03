@@ -53,6 +53,28 @@
         .ssl-info-table td {
             background-color: #fff;
         }
+
+        .lead-container {
+            display: inline-block;
+            margin-right: 10px;
+        }
+
+        .lead-container h2 {
+            display: inline-block;
+        }
+
+        .lead-container pre {
+            display: inline;
+            text-align: justify;
+        }
+
+        .urls-container {
+            margin-top: 20px;
+        }
+
+        .urls-container p {
+            margin-bottom: 5px;
+        }
     </style>
 </head>
 <body>
@@ -148,17 +170,42 @@
             </tbody>
         </table>
 
-        <h2>Is Domain Legitimate?</h2>
-        <p class="isDomainLegitimate"></p>
-
-        <h2>Is Certificate Valid?</h2>
-        <p class="isCertificateValid"></p>
-
-        <h2>Is HTTPS?</h2>
-        <p class="isHttps"></p>
-
-        <h2>ML Model Prediction</h2>
-        <pre class="mlResultText"></pre>
+        <div class="mt-4">
+            <h2 class="lead" style="display: inline-block; margin-right: 10px;">Domain Legitimate?</h2>
+            <pre class="isDomainLegitimate" style="display: inline; text-align: justify;">true</pre>
+            <p> This section checks the legitimacy of the domain by analyzing its expiration date.
+                The domain is considered legitimate if the time remaining until its expiration is above a certain threshold.
+                The current threshold is set to 365 days (1 year). If the domain's expiration date is more than a year in the future,
+                it is deemed legitimate. Adjusting the expiration threshold allows for customizable validation criteria.
+            </p>
+        
+            <h2 class="lead" style="display: inline-block; margin-right: 10px;">Is Certificate Valid?</h2>
+            <pre class="isCertificateValid" style="display: inline; text-align: justify;"></pre>
+            <p> This section checks the validity of the SSL certificate associated with the analyzed website.
+                The SSL certificate is considered valid if the current date falls within the specified validity period,
+                which is determined by the 'Valid From' and 'Valid Until' dates obtained from the certificate information.
+                If the current date is after the 'Valid From' date and before the 'Valid Until' date, the certificate is deemed valid.
+                This ensures that the website's SSL certificate is within its designated active period.
+            </p>
+        
+            <h2 class="lead" style="display: inline-block; margin-right: 10px;">Is HTTPS?</h2>
+            <pre class="isHttps" style="display: inline; text-align: justify;"></pre>
+            <p> This section determines whether the analyzed website uses the secure HTTPS (Hypertext Transfer Protocol Secure) or the standard HTTP (Hypertext Transfer Protocol).
+                HTTPS is a secure version of HTTP, providing encrypted communication between the user's browser and the website, enhancing security and protecting sensitive information.
+                The result indicates whether the website uses HTTPS, contributing to the overall security of the user's browsing experience.
+            </p>
+        
+            <h2 class="lead" style="display: inline-block; margin-right: 10px;">ML Model Prediction (true:Phishing, false:Legitimate)</h2>
+            <pre class="mlResultText" style="display: inline; text-align: justify;"></pre>
+            <p> The Machine Learning model leverages 16 key features, including domain information, DNS details, and HTML & JavaScript-based attributes, to predict various 
+                aspects of the analyzed website. These features encompass domain characteristics, security protocols, and web page structure, enabling the model to provide insights into potential 
+                security risks and the overall legitimacy of the website.
+            </p>
+        </div>
+        <div class="urls-container">
+            <h2>Extracted URLs</h2>
+            
+        </div>
     </div>
 
 

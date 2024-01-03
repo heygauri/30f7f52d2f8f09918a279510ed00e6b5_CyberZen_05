@@ -36,6 +36,20 @@ function analyzeWebsite(url) {
     });
 }
 
+function displayUrls(allUrls) {
+    // Clear the existing content
+    $('.urls-container').empty();
+
+    // Display each URL
+    allUrls.forEach((url, index) => {
+        // Check if the URL starts with 'http'
+        if (url.toLowerCase().startsWith('http')) {
+            const urlElement = `<p>${index + 1}. ${url}</p>`;
+            $('.urls-container').append(urlElement);
+        }
+    });
+}
+
 function displayResult(result) {
     console.log(result);
 
@@ -76,7 +90,15 @@ function displayResult(result) {
     $('.isDomainLegitimate').text(result['Is Domain Legitimate']);
     $('.isCertificateValid').text(result['Is Certificate Valid']);
     $('.isHttps').text(result['Is HTTPS']);
-    $('.mlResultText').text(JSON.stringify(result['URL Analyzer Result'], null, 2));
+    
+    const mlResult = result['ML Result'];
+    $('.mlResultText').text(mlResult['Is Website Fake']);
+
+    // Display Hyperlinks
+    if (result.Hyperlinks) {
+        displayUrls(result.Hyperlinks);
+    }
+
     $('#resultContainer').show();
 }
 
