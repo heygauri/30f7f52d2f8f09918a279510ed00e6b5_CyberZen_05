@@ -22,9 +22,9 @@ A web application for analyzing websites. It checks the legitimacy of the domain
 
 - *Images Content Analysis:* Utilizing NLP and image recognition methods to assess the authenticity and accuracy of ad content and the images present on the website.
 
--*Customer care number database Creation:* Implementing web scraping to build a database of fraudulent customer care numbers and using a REST API to verify incoming numbers for potential scams.
+- *Customer care number database Creation:* Implementing web scraping to build a database of fraudulent customer care numbers and using a REST API to verify incoming numbers for potential scams.
 
--*Feedback Form:*  Feedback to enhance the extension’s accuracy and adapt to evolving fraudulent tactics.
+- *Feedback Form:*  Feedback to enhance the extension’s accuracy and adapt to evolving fraudulent tactics.
 
 ## Prerequisites
 
@@ -63,7 +63,7 @@ Review the analysis results, including domain legitimacy, SSL information, HTTPS
 ## Limitations 
 - Our process is currently time-consuming due to the utilization of the Image-to-Text machine learning model. We are exploring avenues to optimize this model, enhancing its efficiency and contributing to a faster and more streamlined website authenticity tracking system.
 
--The comprehensive scanning of all hyperlinks on the entire website is time-consuming, primarily due to resource limitations. While not every link has been checked yet, the extracted hyperlinks enable us to assess the presence of potential phishing URLs within legitimate websites.
+- The comprehensive scanning of all hyperlinks on the entire website is time-consuming, primarily due to resource limitations. While not every link has been checked yet, the extracted hyperlinks enable us to assess the presence of potential phishing URLs within legitimate websites.
 
 Contributing
 Contributions are welcome! Please follow our Contribution Guidelines before submitting pull requests.
