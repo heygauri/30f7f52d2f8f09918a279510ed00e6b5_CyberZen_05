@@ -1,0 +1,170 @@
+body {
+    background-color: #f8f9fa;
+    color: #343a40;
+}
+
+.container1 {
+    margin-top: 100px;
+    justify-content: center;
+}
+.container2 {
+    margin-top: 200px;
+    justify-content: center;
+}
+
+h1 {
+    color: #007bff;
+}
+
+#urlInput {
+    width: 80%;
+}
+
+#urlHelp {
+    color: #6c757d;
+}
+
+#resultContainer {
+    margin-top: 30px;
+}
+
+#resultText {
+    color: #28a745;
+}
+
+#analyzeButton:disabled {
+    background-color: #6c757d; /* Change to your desired color */
+    color: #fff; /* Change to your desired color */
+    cursor: not-allowed;
+}
+
+.ssl-info-table tr {
+    margin-bottom: 10px;
+}
+
+/* Style the table */
+.ssl-info-table th, .ssl-info-table td {
+    padding: 8px;
+    border: 1px solid #ddd;
+}
+
+.ssl-info-table th {
+    background-color: #f2f2f2;
+}
+
+.ssl-info-table td {
+    background-color: #fff;
+}
+
+.lead-container {
+    display: inline-block;
+    margin-right: 10px;
+}
+
+.lead-container h2 {
+    display: inline-block;
+}
+
+.lead-container pre {
+    display: inline;
+    text-align: justify;
+}
+
+.urls-container {
+    margin-top: 20px;
+}
+
+.urls-container p {
+    margin-bottom: 5px;
+}
+.mlResultText {
+    color: blue;
+    font-weight: bold;
+}
+.legitimate {
+    color: green;
+    font-size: 30px;
+    font-weight: bold;
+}
+.phishing {
+    color: red;
+    font-size: 30px;
+    font-weight: bold;
+}
+.icon::before {
+    font-family: 'Arial';
+    margin-right: 10px;
+    font-weight: bold;
+}
+.icon.legitimate::before {
+    content: "\2713";
+}
+.icon.phishing::before {
+    content: "\2717";
+}
+.suspicious-images-content {
+    border: 1px solid #ddd;
+    padding: 10px;
+    max-height: 200px;
+    overflow-y: auto;
+    margin-top: 10px; /* Adjust margin as needed */
+    background-color: #f8f9fa; /* Optional background color */
+    color: #343a40; /* Optional text color */
+}
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 9px;
+    position:fixed;
+    top: 0;
+    width: 100%;
+    background-color: #333; /* Adjust the background color */
+    color: #fff; /* Adjust the text color */
+}
+.header-logo img{
+    max-width: 40px; /* Adjust the max-width of the logo */
+    height: auto;
+}
+.header-buttons {
+    display: flex;
+    margin-right: 100px;
+}
+.header-buttons a {
+    margin-left: 20px;
+    text-decoration: none;
+    color: #fff; /* Adjust the button text color */
+}
+
+/* Footer styles */
+footer {
+    background-color: #f2f2f2; /* Adjust the background color */
+    color: #fff; /* Adjust the text color */
+    text-align: center;
+    padding: 0;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+}
+
+.footer-links {
+    display: flex;
+    justify-content: center;
+    margin-top: 5px;
+}
+
+.footer-links a {
+    margin-right: 5px;
+    text-decoration: none;
+}
+body {
+    min-height: 100vh;
+    margin: 30px;
+    display: flex;
+    align-items: top;
+    justify-content: center;
+}
+.custom-container {
+    max-width: 400px; /* Adjust the max-width of the container */
+    width: 100%;
+}

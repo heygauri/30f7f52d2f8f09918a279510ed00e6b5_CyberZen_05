@@ -1,14 +1,21 @@
 // static/main.js
 
+$('#editButton').click(function () {
+    location.reload(true); // Force a reload of the page
+});
+
+
 $(document).ready(function() {
     $('#urlForm').submit(function(event) {
         event.preventDefault();
+        $('#analyzeButton').prop('disabled', true);
         const url = $('#urlInput').val();
 
         // Validate the URL using a simple regex
         if (isValidUrl(url)) {
             analyzeWebsite(url);
         } else {
+            $('#urlHelp').text("Please enter a valid URL.");
             alert('Please enter a valid URL.');
         }
     });
@@ -39,9 +46,8 @@ function analyzeWebsite(url) {
 function displayUrls(allUrls) {
     // Clear the existing content
     $('.urls-container').empty();
-
     // Display each URL
-    allUrls.forEach((url, index) => {
+    (allUrls).forEach((url, index) => {
         // Check if the URL starts with 'http'
         if (url.toLowerCase().startsWith('http')) {
             const urlElement = `<p>${index + 1}. ${url}</p>`;
@@ -78,8 +84,10 @@ function displayResult(result) {
             $('.ssl-info-status').text(domainInfo['status'] || 'N/A');
             $('.ssl-info-updated-date').text(domainInfo['updated_date'] || 'N/A');
         }
-
-        // Update other HTML content as needed
+        else {
+            $('.ssl-info-country, .ssl-info-creation-date, .ssl-info-dnssec, .ssl-info-domain-name, .ssl-info-emails, .ssl-info-expiration-date, .ssl-info-name-servers, .ssl-info-organization, .ssl-info-registrar, .ssl-info-registrar-iana, .ssl-info-registrar-url, .ssl-info-state, .ssl-info-status, .ssl-info-updated-date').text('N/A');
+        }
+        
         $('.ssl-info-protocol').text(sslInfo['Protocol'] || 'N/A');
         $('.ssl-info-valid-from').text(sslInfo['Valid From'] || 'N/A');
         $('.ssl-info-valid-until').text(sslInfo['Valid Until'] || 'N/A');
@@ -87,17 +95,69 @@ function displayResult(result) {
 
     // Update other HTML content as needed
     $('.url').text(result.Url || 'N/A');
-    $('.isDomainLegitimate').text(result['Is Domain Legitimate']);
-    $('.isCertificateValid').text(result['Is Certificate Valid']);
-    $('.isHttps').text(result['Is HTTPS']);
     
-    const mlResult = result['ML Result'];
-    $('.mlResultText').text(mlResult['Is Website Fake']);
-
-    // Display Hyperlinks
-    if (result.Hyperlinks) {
-        displayUrls(result.Hyperlinks);
+    if(result['Is Domain Legitimate']) {
+        $('.isDomainLegitimate').addClass('legitimate').removeClass('phishing');
+    } else {
+        $('.isDomainLegitimate').addClass('phishing').removeClass('legitimate');
     }
+    
+    if(result['Is Certificate Valid']) {
+        $('.isCertificateValid').addClass('legitimate').removeClass('phishing');
+    } else {
+        $('.isCertificateValid').addClass('phishing').removeClass('legitimate');
+    }
+
+    if(result['Is HTTPS']) {
+        $('.isHttps').addClass('legitimate').removeClass('phishing');
+    } else {
+        $('.isHttps').addClass('phishing').removeClass('legitimate');
+    }
+
+    const mlResult = result['URL Analyzer Result'];
+    var mlResultText = $('.mlResultText');
+
+    // Update the text content
+    mlResultText.text(mlResult['Is Website Fake']? "  This URL is Phishing": "  This URL is Legitimate");
+
+    // Apply styling based on the value
+    if (mlResult['Is Website Fake']) {
+        mlResultText.addClass('phishing').removeClass('legitimate');
+    } else {
+        mlResultText.addClass('legitimate').removeClass('phishing');
+    }
+
+    if (result.Hyperlinks && result.Hyperlinks.length > 0) {
+        // 'Hyperlinks' data is available, so display the HTML block
+        $('.urls-container').html('<h2 class="lead" style="display: inline-block; margin-right: 10px;">Extracted URL\'s</h2><div class="urls-container"></div>');
+
+        // Update the content of '.urls-container' with the hyperlinks
+        displayUrls(result.Hyperlinks);
+    } else {
+        // 'Hyperlinks' data is not available, so hide the HTML block
+        $('.urls-container-heading').hide();
+        $('.urls-container').hide();
+    }
+
+    // Display Suspicious Images Content
+    if (result['Suspicious Images Content']) {
+        // 'Suspicious Images Content' data is available, so display the HTML block
+        // $('.suspicious-images-content').html('<h2 class="lead" style="display: inline-block; margin-right: 10px;">Suspicious Images Content</h2><div class="suspicious-images-content">' + result['Suspicious Images Content'] + '</div>');
+    } else {
+        // 'Suspicious Images Content' data is not available, so hide the HTML block
+        $('.suspicious-images-content-heading').hide();
+        $('.suspicious-images-content').hide();
+    }
+
+
+
+    // // Display Hyperlinks
+    // if (result.Hyperlinks) {
+    //     displayUrls(result.Hyperlinks);
+    // }
+
+    // const suspiciousImagesContent = result['Suspicious Images Content'].join('<br>');
+    // $('.suspicious-images-content').html(suspiciousImagesContent);
 
     $('#resultContainer').show();
 }

@@ -1,0 +1,55 @@
+<!-- feedback.html -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Feedback System</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="header-logo">
+            <img src="/home/sumitra/opensource/heygauri/30f7f52d2f8f09918a279510ed00e6b5_CyberZen_05/icon.png" alt="Logo">
+        </div>
+        <div class="header-buttons">
+            <a href="about-us.html">About Us</a>
+            <a href="contact-us.html">Contact Us</a>
+            <a href="feedback.html">Feedback</a>
+            <a href="login.html">Login</a>
+            <a href="sign-up.html">Sign Up</a>
+        </div>
+    </header>
+
+    <div class="container1 custom-container">
+        <h1 class="mb-4">Feedback Form</h1>
+        <form id="feedbackForm">
+            <div class="form-group">
+                <label for="feedbackUsername">Username:</label>
+                <input type="username" class="form-control" id="usernameInput" placeholder="Username" required><br>
+                <label for="feedbackTextarea">Feedback:</label>
+                <textarea class="form-control" id="feedbackTextarea" rows="3" placeholder="Enter your feedback" required></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary">Submit Feedback</button>
+            <button type="submit" class="btn btn-primary" id="clearButton">Clear</button>
+        </form>
+    </div>       
+
+    <footer>
+        <div class="footer-links">
+            <p style="color: #6c757d;">This is a demo website</p>
+        </div>
+    </footer>
+    
+
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs"></script>
+    <script src="feedback.js"></script></body>
+</html>
+

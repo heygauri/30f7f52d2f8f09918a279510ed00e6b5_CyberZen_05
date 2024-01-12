@@ -7,94 +7,49 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Website Analyzer</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    <style>
-        body {
-            background-color: #f8f9fa;
-            color: #343a40;
-        }
-
-        .container {
-            margin-top: 50px;
-        }
-
-        h1 {
-            color: #007bff;
-        }
-
-        #urlInput {
-            width: 80%;
-        }
-
-        #urlHelp {
-            color: #6c757d;
-        }
-
-        #resultContainer {
-            margin-top: 20px;
-        }
-
-        #resultText {
-            color: #28a745;
-        }
-        .ssl-info-table tr {
-        margin-bottom: 10px;
-        }
-
-        /* Style the table */
-        .ssl-info-table th, .ssl-info-table td {
-            padding: 8px;
-            border: 1px solid #ddd;
-        }
-
-        .ssl-info-table th {
-            background-color: #f2f2f2;
-        }
-
-        .ssl-info-table td {
-            background-color: #fff;
-        }
-
-        .lead-container {
-            display: inline-block;
-            margin-right: 10px;
-        }
-
-        .lead-container h2 {
-            display: inline-block;
-        }
-
-        .lead-container pre {
-            display: inline;
-            text-align: justify;
-        }
-
-        .urls-container {
-            margin-top: 20px;
-        }
-
-        .urls-container p {
-            margin-bottom: 5px;
-        }
-    </style>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <div class="container">
-        <h1 class="mb-4">Website Analyzer</h1>
+
+    <header>
+        <div class="header-logo">
+            <img src="/home/sumitra/opensource/heygauri/30f7f52d2f8f09918a279510ed00e6b5_CyberZen_05/icon.png" alt="Logo">
+        </div>
+        <div class="header-buttons">
+            <a href="about-us.html">About Us</a>
+            <a href="contact-us.html">Contact Us</a>
+            <a href="feedback.html">Feedback</a>
+            <a href="login.html">Login</a>
+            <a href="sign-up.html">Sign Up</a>
+        </div>
+    </header>
+
+    <div class="container1 custom-container">
+        <h1 class="mb-4" style="font-family:Brush Script MT; font-style: oblique;">Website Analyzer</h1>
         <form id="urlForm">
             <div class="form-group">
                 <label for="urlInput">Enter URL:</label>
                 <input type="url" class="form-control" id="urlInput" placeholder="https://example.com" required>
-                <small id="urlHelp" class="form-text text-muted">Please enter a valid URL.</small>
+                <small id="urlHelp" class="form-text text-muted"></small>
             </div>
-            <button type="submit" class="btn btn-primary">Analyze</button>
+            <button type="submit"  class="btn btn-primary" id="analyzeButton">Analyze</button>
+            <input type="url" class="form-control" id="editInput" placeholder="Enter new URL" style="display: none;">
+            <button type="submit" class="btn btn-primary" id="editButton">Edit</button>
         </form>
     </div>
 
-    <div id="resultContainer" class="container mt-4" style="display: none;">
-        <h1>Analysis Result</h1>
+    <div id="resultContainer" class="container2 mt-4" style="display: none;">
+        <h1>Analysis Result</h1><br>
 
         <h2>URL</h2>
         <p class="url"></p>
+
+        <h2 style="display: inline-block;">ML Model Prediction</h2>
+        <pre class="mlResultText icon" style="display: inline; text-align: justify;"></pre>
+        <p> The Machine Learning model leverages 16 key features, including domain information, DNS details, and HTML & JavaScript-based attributes, to predict various 
+            aspects of the analyzed website. These features encompass domain characteristics, security protocols, and web page structure, enabling the model to provide insights into potential 
+            security risks and the overall legitimacy of the website.
+        </p><br>
 
         <h2>SSL Information</h2>
         <table class="ssl-info-table">
@@ -169,18 +124,18 @@
                 </tr>
             </tbody>
         </table>
-
+    
         <div class="mt-4">
-            <h2 class="lead" style="display: inline-block; margin-right: 10px;">Domain Legitimate?</h2>
-            <pre class="isDomainLegitimate" style="display: inline; text-align: justify;">true</pre>
+            <h2 class="lead" style="display: inline-block; margin-right: 10px;">Is Domain Legitimate</h2>
+            <pre class="isDomainLegitimate icon" style="display: inline; text-align: justify;"></pre>
             <p> This section checks the legitimacy of the domain by analyzing its expiration date.
                 The domain is considered legitimate if the time remaining until its expiration is above a certain threshold.
                 The current threshold is set to 365 days (1 year). If the domain's expiration date is more than a year in the future,
                 it is deemed legitimate. Adjusting the expiration threshold allows for customizable validation criteria.
             </p>
         
-            <h2 class="lead" style="display: inline-block; margin-right: 10px;">Is Certificate Valid?</h2>
-            <pre class="isCertificateValid" style="display: inline; text-align: justify;"></pre>
+            <h2 class="lead" style="display: inline-block; margin-right: 10px;">Is Certificate Valid</h2>
+            <pre class="isCertificateValid icon" style="display: inline; text-align: justify;"></pre>
             <p> This section checks the validity of the SSL certificate associated with the analyzed website.
                 The SSL certificate is considered valid if the current date falls within the specified validity period,
                 which is determined by the 'Valid From' and 'Valid Until' dates obtained from the certificate information.
@@ -188,28 +143,32 @@
                 This ensures that the website's SSL certificate is within its designated active period.
             </p>
         
-            <h2 class="lead" style="display: inline-block; margin-right: 10px;">Is HTTPS?</h2>
-            <pre class="isHttps" style="display: inline; text-align: justify;"></pre>
-            <p> This section determines whether the analyzed website uses the secure HTTPS (Hypertext Transfer Protocol Secure) or the standard HTTP (Hypertext Transfer Protocol).
+            <h2 class="lead" style="display: inline-block; margin-right: 10px;">Is HTTPS</h2>
+            <pre class="isHttps icon" style="display: inline; text-align: justify;"></pre>
+            <p> This section determines whether the analyzed website uses the secure HTTPS (Hypertext Transfer Protocol Secure) or not.
                 HTTPS is a secure version of HTTP, providing encrypted communication between the user's browser and the website, enhancing security and protecting sensitive information.
                 The result indicates whether the website uses HTTPS, contributing to the overall security of the user's browsing experience.
             </p>
         
-            <h2 class="lead" style="display: inline-block; margin-right: 10px;">ML Model Prediction (true:Phishing, false:Legitimate)</h2>
-            <pre class="mlResultText" style="display: inline; text-align: justify;"></pre>
-            <p> The Machine Learning model leverages 16 key features, including domain information, DNS details, and HTML & JavaScript-based attributes, to predict various 
-                aspects of the analyzed website. These features encompass domain characteristics, security protocols, and web page structure, enabling the model to provide insights into potential 
-                security risks and the overall legitimacy of the website.
-            </p>
-        </div>
-        <div class="urls-container">
-            <h2>Extracted URLs</h2>
-            
-        </div>
-    </div>
+        </div><br>
 
+        <div> 
+            <h2 class="urls-container-heading" style="display: inline-block; margin-right: 10px;">Exracted URLs's</h2>
+            <p class="urls-container"></p> 
+        </div><br>
+        
+        <div>
+            <h2 class="suspicious-images-content-heading" style="display: inline-block; margin-right: 10px;">Suspicious Image Content</h2>
+            <p class="suspicious-images-content"></p>
+        </div>
+    </div><br>
 
-    </div>
+    <footer>
+        <div class="footer-links">
+            <p style="color: #6c757d;">This is a demo website</p>
+        </div>
+    </footer>
+    
 
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs"></script>
