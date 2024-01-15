@@ -19,8 +19,6 @@ import json
 import ssl
 import re
 
-app = Flask(__name__)
-CORS(app)
 
 import string
 from sklearn.feature_extraction.text import TfidfVectorizer
@@ -39,6 +37,67 @@ from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 import easyocr
 
+# import mysql.connector
+
+
+# app = Flask(__name__)
+# CORS(app, resources={r"/*": {"origins": "*"}, r"/save-analysis": {"origins": "*"}})
+
+# db_config = {
+#     "host": "localhost",
+#     "user": "sumitra",
+#     "password": "Sumitra@2",
+#     "database": "website_analyzer",
+# }
+
+# # Establish the MySQL connection
+# mysql_connection = mysql.connector.connect(**db_config)
+
+from flask import Flask, render_template, request, redirect, url_for, session
+from flask_mysqldb import MySQL
+import secrets
+
+app = Flask(__name__)
+CORS(app)
+
+# MySQL Configuration
+app.config['MYSQL_HOST'] = 'localhost'
+app.config['MYSQL_USER'] = 'sumitra'
+app.config['MYSQL_PASSWORD'] = 'Sumitra@2'
+app.config['MYSQL_DB'] = 'website_analyzer'
+app.config['MYSQL_CURSORCLASS'] = 'DictCursor'
+
+mysql = MySQL(app)
+
+# Generate a random 32-character hexadecimal string
+secret_key = secrets.token_hex(16)
+
+# Secret key for session
+app.secret_key = secret_key
+
+# Login route
+@app.route('/admin-login', methods=['GET', 'POST'])
+def admin_login():
+    if request.method == 'POST':
+        username = request.form['username']
+        password = request.form['password']
+
+        # Query the database to check if the user exists and the password is correct
+        cur = mysql.connection.cursor()
+        cur.execute("SELECT * FROM users WHERE username = %s AND password = %s", (username, password))
+        user = cur.fetchone()
+        cur.close()
+
+        if user:
+            session['logged_in'] = True
+            return true
+        else:
+            return false
+
+    return false
+
+
+# <----------------------------------------------------------------------------------------------------------------------->
 
 # Function to clean and preprocess text
 def clean_text(text):
@@ -53,7 +112,7 @@ def count_punct(text):
     return round(count/(len(text) - text.count(" ")), 3)*100
 
 
-# <-------------------------------------------------------------------->
+# <----------------------------------------------------------------------------------------------------------------------->
 
 def initialize_driver():
     chrome_options = Options()
@@ -153,7 +212,7 @@ def extract_urls_with_selenium(url):
     return html_content, base_url
 
 
-# <--------------------------------------------------------------------->
+# <------------------------------------------------------------------------------------------------------------------------>
 
 # Import necessary libraries for hyperlink web scraping
 from selenium import webdriver
@@ -213,13 +272,18 @@ def extract_all_urls_dynamic(website_url):
         text_urls = re.findall(r'http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\\(\\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+', text_content)
         all_urls.extend(text_urls)
 
+        # Update only the URLs that start with "http" or "https"
+        for i in range(len(all_urls)):
+            if all_urls[i].startswith('http'):
+                all_urls[i] = {'index': i + 1, 'url': all_urls[i]}
+
         return all_urls
 
     finally:
         driver.quit()
 
 
-# <--------------------------------------------------------------------->
+# <------------------------------------------------------------------------------------------------------------------------>
 
 def get_whois_info(url):
     try:
@@ -590,16 +654,6 @@ def get_certificate_information(url):
         print('Certificate information retrieval error')
         return {}
 
-@app.route('/')
-def index():
-    return render_template('index.html')
-
-@app.route('/submit-feedback', methods=['POST'])
-def feedback():
-    try:
-          return jsonify(feedback)
-    except Exception as e:
-        return jsonify({'error': str(e)})
 
 @app.route('/analyze', methods=['POST'])
 def analyze():
@@ -608,7 +662,7 @@ def analyze():
         
         # Predict website using ML model
         url_analyzer_result = url_analyzer_model(url)
-
+        print("model result ", url_analyzer_result)
         # Get SSL information
         ssl_info = get_certificate_information(url)
         
@@ -634,31 +688,37 @@ def analyze():
             protocol = ssl_info['Protocol']
             domain_info = ssl_info['Domain Info']
 
-        # Extract the expiration date from WHOIS information
-        expiration_date = domain_info.get('expiration_date', None)
+        if 'expiration_date' in domain_info and 'valid_from_date' in domain_info and 'valid_until_date' in domain_info:
 
-        # Check if expiration_date is a list and get the first element
-        if isinstance(expiration_date, list):
-            expiration_date = expiration_date[0]
+            # Extract the expiration date from WHOIS information
+            expiration_date = domain_info.get('expiration_date', None)
 
-        expiration_date = datetime.strptime(str(expiration_date), '%Y-%m-%d %H:%M:%S')
+            # Check if expiration_date is a list and get the first element
+            if isinstance(expiration_date, list):
+                expiration_date = expiration_date[0]
 
-        today = datetime.now()
-        expiration_threshold = 365  # Set your threshold (e.g., 1 year)
-        is_domain_legitimate = (expiration_date - today).days > expiration_threshold
+            expiration_date = datetime.strptime(str(expiration_date), '%Y-%m-%d %H:%M:%S')
 
-        # Check if the certificate is still valid
-        current_date = datetime.now()
-        valid_from_date = datetime.strptime(valid_from, "%b %d %H:%M:%S %Y %Z")
-        valid_until_date = datetime.strptime(valid_until, "%b %d %H:%M:%S %Y %Z")
+            today = datetime.now()
+            expiration_threshold = 365  # Set your threshold (e.g., 1 year)
+            is_domain_legitimate = (expiration_date - today).days > expiration_threshold
 
-        is_certificate_valid = current_date >= valid_from_date and current_date <= valid_until_date
+            # Check if the certificate is still valid
+            current_date = datetime.now()
+            valid_from_date = datetime.strptime(valid_from, "%b %d %H:%M:%S %Y %Z")
+            valid_until_date = datetime.strptime(valid_until, "%b %d %H:%M:%S %Y %Z")
 
-        if is_certificate_valid:
-            print("The certificate is valid.")
+            is_certificate_valid = current_date >= valid_from_date and current_date <= valid_until_date
+
+            if is_certificate_valid:
+                print("The certificate is valid.")
+            else:
+                print("The certificate is not valid.")
+        
         else:
-            print("The certificate is not valid.")
-
+            is_domain_legitimate = False;
+            is_certificate_valid = False;
+            
         # Check protocol used
         var = 'HTTPS' if url.startswith('https://') else ('HTTP' if url.startswith('http://') else 'N/A')
         is_https = var == 'HTTPS'
@@ -774,6 +834,42 @@ def analyze():
           return jsonify(analysis_result)
     except Exception as e:
         return jsonify({'error': str(e)})
+
+# <------------------------------------------------------------------------------------------------------------------------>
+
+@app.route('/')
+def index():
+    return render_template('index.html')
+
+# <--------------------------------------------MYSQL-DATABASE--------------------------------------------------------------->
+
+# Save feedback
+@app.route('/save-feedback', methods=['POST'])
+def save_feedback():
+    data = request.get_json()
+    content = data.get('content')
+
+    # Insert feedback into the database
+    cur = mysql.connection.cursor()
+    cur.execute('INSERT INTO feedback (content) VALUES (%s)', (content))
+    mysql.connection.commit()
+    cur.close()
+
+    return jsonify(success=True, message='Feedback saved successfully'), 200
+
+@app.route('/save-analysis', methods=['POST'])
+def save_analysis():
+    data = request.get_json()
+    url_input = data.get('url_input')
+    model_output = data.get('model_output')
+
+    # Insert analysis result into the database
+    cur = mysql.connection.cursor()
+    cur.execute('INSERT INTO website_analysis (url_input, model_output) VALUES (%s, %s)', (url_input, model_output))
+    mysql.connection.commit()
+    cur.close()
+
+    return jsonify(success=True, message='Analysis result saved successfully'), 200
 
 
 if __name__ == '__main__':

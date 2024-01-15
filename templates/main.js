@@ -46,15 +46,27 @@ function analyzeWebsite(url) {
 function displayUrls(allUrls) {
     // Clear the existing content
     $('.urls-container').empty();
+    
+    // Initialize i outside the loop
+    var i = 1;
+
     // Display each URL
-    (allUrls).forEach((url, index) => {
-        // Check if the URL starts with 'http'
-        if (url.toLowerCase().startsWith('http')) {
-            const urlElement = `<p>${index + 1}. ${url}</p>`;
-            $('.urls-container').append(urlElement);
+    allUrls.forEach(entry => {
+        // Check if the entry has 'index' and 'url' properties
+        if (entry && typeof entry === 'object' && 'index' in entry && 'url' in entry) {
+            const index = entry.index;
+            const url = entry.url;
+
+            // Check if the URL starts with 'http'
+            if (url.toLowerCase().startsWith('http')) {
+                const urlElement = `<p>${i}. ${url}</p>`;
+                i = i + 1;
+                $('.urls-container').append(urlElement);
+            }
         }
     });
 }
+
 
 function displayResult(result) {
     console.log(result);
@@ -120,16 +132,42 @@ function displayResult(result) {
     // Update the text content
     mlResultText.text(mlResult['Is Website Fake']? "  This URL is Phishing": "  This URL is Legitimate");
 
+
     // Apply styling based on the value
     if (mlResult['Is Website Fake']) {
         mlResultText.addClass('phishing').removeClass('legitimate');
+        temp = "phishing"
     } else {
         mlResultText.addClass('legitimate').removeClass('phishing');
+        temp = "legitimate"
     }
 
+    // Saving the analysis result in database
+    const data = {
+        url_input: result.Url || 'N/A',
+        model_output: temp
+    };
+    
+    fetch('http://127.0.0.1:5000/save-analysis', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log('Success:', data);
+        // Handle success, update UI, etc.
+    })
+    .catch((error) => {
+        console.error('Error:', error);
+        // Handle error, show error message, etc.
+    });
+    
     if (result.Hyperlinks && result.Hyperlinks.length > 0) {
         // 'Hyperlinks' data is available, so display the HTML block
-        $('.urls-container').html('<h2 class="lead" style="display: inline-block; margin-right: 10px;">Extracted URL\'s</h2><div class="urls-container"></div>');
+        $('.url-container').html('<h2 class="lead" style="display: inline-block; margin-right: 10px;">Extracted URL\'s</h2><div class="url-container"></div>');
 
         // Update the content of '.urls-container' with the hyperlinks
         displayUrls(result.Hyperlinks);

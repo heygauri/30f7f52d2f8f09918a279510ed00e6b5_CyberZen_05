@@ -17,7 +17,7 @@ h1 {
 }
 
 #urlInput {
-    width: 80%;
+    width: 100%;
 }
 
 #urlHelp {
@@ -72,10 +72,20 @@ h1 {
 
 .urls-container {
     margin-top: 20px;
+    max-height: 450px; /* Set a maximum height for the container */
+    max-width: 950px;
+    overflow-y: auto; /* Add vertical scrollbar if content overflows */
 }
 
 .urls-container p {
     margin-bottom: 5px;
+    white-space: nowrap; /* Prevent line breaks */
+    overflow: auto;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 4; 
+    -webkit-box-orient: vertical;
+    word-wrap: break-word;
 }
 .mlResultText {
     color: blue;
@@ -110,6 +120,7 @@ h1 {
     margin-top: 10px; /* Adjust margin as needed */
     background-color: #f8f9fa; /* Optional background color */
     color: #343a40; /* Optional text color */
+    text-overflow: ellipsis;
 }
 header {
     display: flex;
@@ -119,7 +130,7 @@ header {
     position:fixed;
     top: 0;
     width: 100%;
-    background-color: #333; /* Adjust the background color */
+    background-color: #6c757d; /* Adjust the background color */
     color: #fff; /* Adjust the text color */
 }
 .header-logo img{
@@ -138,7 +149,8 @@ header {
 
 /* Footer styles */
 footer {
-    background-color: #f2f2f2; /* Adjust the background color */
+    background-color: #6c757d; /* Adjust the background color */
+    /* background-color: #f2f2f2;  */
     color: #fff; /* Adjust the text color */
     text-align: center;
     padding: 0;
@@ -165,6 +177,17 @@ body {
     justify-content: center;
 }
 .custom-container {
-    max-width: 400px; /* Adjust the max-width of the container */
+    max-width: 600px; /* Adjust the max-width of the container */
     width: 100%;
+}
+.image-container {
+    width: 100%;
+    /* Customize the height as needed */
+    height: 300px; /* Example height, change accordingly */
+    overflow: hidden; /* Hide overflow to avoid scroll bars */
+}
+
+.background-image {
+    width: 100%;
+    height: auto;
 }

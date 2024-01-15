@@ -1,0 +1,117 @@
+
+<!-- feedback.html -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Feedback System</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            height: 100vh;
+            overflow: auto;
+        }
+
+        #left-container, #right-container {
+            height: 400px;
+            position: fixed;
+            top: 10em;
+            bottom: 25em;
+            width: 300px;
+            overflow: hidden;
+        }
+
+        #left-container {
+            left: 25px;
+            background-color: #e6e6e6;
+        }
+
+        #right-container {
+            right: 25px;
+            background-color: #e6e6e6;
+        }
+
+        .banner {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .center-container {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+            margin-left: 10px; /* Adjust as needed based on your banner width */
+            margin-right: 10px; /* Adjust as needed based on your banner width */
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="header-logo">
+            <img src="/home/sumitra/opensource/heygauri/30f7f52d2f8f09918a279510ed00e6b5_CyberZen_05/images/logo.png" alt="Logo">
+        </div>
+        <div class="header-buttons">
+            <a href="index.html">Home</a>
+            <a href="about-us.html">About Us</a>
+            <a href="contact-us.html">Contact Us</a>
+            <a href="blog.html">Do's & Dont's</a>
+            <a href="feedback.html">Feedback</a>
+            <a href="admin-login.html">Admin Login</a>
+        </div>
+    </header>
+
+    <div class="container1 custom-container" style="max-width: 600px; margin-bottom: 50px; text-align: justify;" >
+
+        <h1 style="color: black;">About Us - Website Analyzer</h1>
+        <p>
+            Welcome to Website Analyzer, your go-to platform for checking the legitimacy of any given URL. Our mission is to empower users with the tools needed to make informed decisions about the websites they interact with.
+        </p>
+        <p>
+            At the core of our website lies the powerful machine learning model known as Url Analyzer. This sophisticated system classifies URLs, helping users identify whether a website is legitimate or not. But we don't stop there – our platform goes above and beyond with two additional subsystems that enhance the depth of analysis.
+        </p>
+        <hr>
+        <h2>Extracted URLs - Hyperlink Fetcher</h2>
+        <p>
+            Our Extracted URLs subsystem serves as a hyperlink fetcher. It meticulously extracts all hyperlinks present on the input URL's page. This feature provides users with valuable insights into the interconnected web of URLs associated with a given website.
+        </p>
+        <hr>
+        <h2>NLP Content Analysis System</h2>
+        <p>
+            The NLP Content Analysis System is the second pillar of our comprehensive analysis. It delves into the content of websites, even extracting text from images using OCR (Optical Character Recognition). This NLP-driven analysis allows us to categorize content as either legitimate or potentially spammy, adding an extra layer of scrutiny to our evaluation process.
+        </p>
+        <p>
+            This meticulous and in-depth analysis of our entire system sets Website Analyzer apart. We are committed to providing a robust and reliable service to help users navigate the vast landscape of the internet securely.
+        </p>
+        <p>
+            Thank you for choosing Website Analyzer. Your trust is our driving force as we continue to evolve and enhance our platform.
+        </p>
+    </div>   
+
+    <footer>
+        <div class="footer-links">
+            <p>This is a demo website</p>
+        </div>
+    </footer>
+    <div id="left-container">
+        <img class="banner" src="/home/sumitra/opensource/heygauri/30f7f52d2f8f09918a279510ed00e6b5_CyberZen_05/images/banner-left.png" alt="Left Banner">
+    </div>
+    <div id="right-container">
+        <img class="banner" src="/home/sumitra/opensource/heygauri/30f7f52d2f8f09918a279510ed00e6b5_CyberZen_05/images/banner-right.png" alt="Right Banner">
+    </div>
+
+
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs"></script>
+    <script src="feedback.js"></script></body>
+</html>
+
+
+
