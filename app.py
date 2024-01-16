@@ -54,26 +54,26 @@ import easyocr
 # mysql_connection = mysql.connector.connect(**db_config)
 
 from flask import Flask, render_template, request, redirect, url_for, session
-from flask_mysqldb import MySQL
+# from flask_mysqldb import MySQL
 import secrets
 
 app = Flask(__name__)
 CORS(app)
 
-# MySQL Configuration
-app.config['MYSQL_HOST'] = 'localhost'
-app.config['MYSQL_USER'] = 'sumitra'
-app.config['MYSQL_PASSWORD'] = 'Sumitra@2'
-app.config['MYSQL_DB'] = 'website_analyzer'
-app.config['MYSQL_CURSORCLASS'] = 'DictCursor'
+# # MySQL Configuration
+# app.config['MYSQL_HOST'] = 'localhost'
+# app.config['MYSQL_USER'] = 'sumitra'
+# app.config['MYSQL_PASSWORD'] = 'Sumitra@2'
+# app.config['MYSQL_DB'] = 'website_analyzer'
+# app.config['MYSQL_CURSORCLASS'] = 'DictCursor'
 
-mysql = MySQL(app)
+# mysql = MySQL(app)
 
-# Generate a random 32-character hexadecimal string
-secret_key = secrets.token_hex(16)
+# # Generate a random 32-character hexadecimal string
+# secret_key = secrets.token_hex(16)
 
-# Secret key for session
-app.secret_key = secret_key
+# # Secret key for session
+# app.secret_key = secret_key
 
 # Login route
 @app.route('/admin-login', methods=['GET', 'POST'])
@@ -407,7 +407,7 @@ shortening_services = r"bit\.ly|goo\.gl|shorte\.st|go2l\.ink|x\.co|ow\.ly|t\.co|
 
 # 8. Checking for Shortening Services in URL (Tiny_URL)
 def tinyURL(url):
-    match=re.search(shortening_services,url)
+    match = re.search(shortening_services, url)
     if match:
         print("8:1")
         return 1
@@ -682,42 +682,58 @@ def analyze():
             print(analysis_result)
             return jsonify(analysis_result)
 
-        else:
-            valid_from = ssl_info['Valid From']
-            valid_until = ssl_info['Valid Until']
-            protocol = ssl_info['Protocol']
-            domain_info = ssl_info['Domain Info']
+        valid_from = ssl_info['Valid From']
+        valid_until = ssl_info['Valid Until']
+        protocol = ssl_info['Protocol']
+        domain_info = ssl_info['Domain Info']
+      
+        # Assuming 'valid_from' and 'valid_until' are keys in domain_info
+        valid_from = domain_info.get('creation_date', None)
+        valid_until = domain_info.get('expiration_date', None)
+        print("\n valid_from = ", valid_from);
+        print("\n valid_until = ", valid_until);
 
-        if 'expiration_date' in domain_info and 'valid_from_date' in domain_info and 'valid_until_date' in domain_info:
-
-            # Extract the expiration date from WHOIS information
-            expiration_date = domain_info.get('expiration_date', None)
-
-            # Check if expiration_date is a list and get the first element
+        # Handle expiration_date
+        expiration_date = domain_info.get('expiration_date', None)
+        if expiration_date is not None:
             if isinstance(expiration_date, list):
                 expiration_date = expiration_date[0]
 
-            expiration_date = datetime.strptime(str(expiration_date), '%Y-%m-%d %H:%M:%S')
+            try:
+                expiration_date = datetime.strptime(str(expiration_date), '%Y-%m-%d %H:%M:%S')
+            except ValueError:
+                print("Error: Invalid expiration date format.")
+                expiration_date = None
 
-            today = datetime.now()
-            expiration_threshold = 365  # Set your threshold (e.g., 1 year)
-            is_domain_legitimate = (expiration_date - today).days > expiration_threshold
-
-            # Check if the certificate is still valid
-            current_date = datetime.now()
-            valid_from_date = datetime.strptime(valid_from, "%b %d %H:%M:%S %Y %Z")
-            valid_until_date = datetime.strptime(valid_until, "%b %d %H:%M:%S %Y %Z")
-
-            is_certificate_valid = current_date >= valid_from_date and current_date <= valid_until_date
-
-            if is_certificate_valid:
-                print("The certificate is valid.")
+            if expiration_date is not None:
+                today = datetime.now()
+                expiration_threshold = 365  # Set your threshold (e.g., 1 year)
+                is_domain_legitimate = (expiration_date - today).days >= expiration_threshold
             else:
-                print("The certificate is not valid.")
-        
+                is_domain_legitimate = False
         else:
-            is_domain_legitimate = False;
-            is_certificate_valid = False;
+            is_domain_legitimate = False
+
+        # Handle valid_from and valid_until
+        if valid_from is not None and valid_until is not None:
+            try:
+                print("\n valid_from_date = ", valid_from)
+                print("\n valid_until_date = ", valid_until)
+
+                current_date = datetime.now()
+                is_certificate_valid = current_date >= valid_from and current_date <= valid_until
+            except ValueError:
+                print("Error: Invalid date format for certificate validity.")
+                is_certificate_valid = False
+        else:
+            is_certificate_valid = False
+
+        if is_certificate_valid:
+            print("The certificate is valid.")
+        else:
+            print("The certificate is not valid.")
+
+        print("\n expiration_date = ", expiration_date);
             
         # Check protocol used
         var = 'HTTPS' if url.startswith('https://') else ('HTTP' if url.startswith('http://') else 'N/A')
@@ -736,102 +752,102 @@ def analyze():
                   'Is Certificate Valid': is_certificate_valid,
                   'Is HTTPS': is_https,
                   'URL Analyzer Result': url_analyzer_result,
-                  'Hyperlinks': [],
+                  'Hyperlinks': extract_all_urls_dynamic(url),
                   'Suspicious Images Content': []
               }
               print(analysis_result)
               return jsonify(analysis_result)
-        else: 
-          # Retrieving all hyperlinks present on the url
-          target_website_url = url
-          all_urls = extract_all_urls_dynamic(target_website_url)
+         
+        # Retrieving all hyperlinks present on the url
+        target_website_url = url
+        all_urls = extract_all_urls_dynamic(target_website_url)
 
-          # # Retrieving Images present on the url
-          # target_url = url
-          # html_content, base_url = extract_urls_with_selenium(target_url)
-          # image_urls = extract_image_urls(html_content, base_url)
-          # extracted_texts = extract_text_from_images(image_urls)
+        # # Retrieving Images present on the url
+        # target_url = url
+        # html_content, base_url = extract_urls_with_selenium(target_url)
+        # image_urls = extract_image_urls(html_content, base_url)
+        # extracted_texts = extract_text_from_images(image_urls)
 
-          # # Save extracted texts in a text file
-          # result_file_path = 'result.txt'
-          # with open(result_file_path, 'w') as result_file:
-          #     for idx, text in enumerate(extracted_texts, 1):
-          #         result_file.write(f"Text from Image {idx}: {text}\n")
-          
-          # # NLP model Integration
-          # # Load the trained TF-IDF vectorizer
-          # with open('tfidf_vectorizer.pkl', 'rb') as file:
-          #     tfidf_vect_fit = tfidf_vectorizer.load(file)
-              
-          # # Load the trained Random Forest model
-          # with open('random_forest_model.pkl', 'rb') as file:
-          #     rf_model = pickle.load(file)
-
-
-
-          # # Load the text from the file
-          # file_path = "result.txt"  
-          # with open(file_path, "r") as file:
-          #     text_data = file.readlines()
-
-          # # Check if the text file is empty
-          # if not text_data:
-          #     print("Image text is empty.")
-          # else:
-          #     # Initialize an empty list to store suspicious images
-          #     suspicious_images_text = []
-
-          #     # Preprocess and predict for each text
-          #     for i, text in enumerate(text_data):
-          #         # Preprocess the text data
-          #         cleaned_text_data = clean_text(text)
-
-          #         # Use the trained TF-IDF vectorizer
-          #         tfidf_values = tfidf_vect_fit.transform([cleaned_text_data])
-          #         tfidf_df = pd.DataFrame(tfidf_values.toarray(), columns=tfidf_vect_fit.get_feature_names_out())
-
-          #         # Create features
-          #         text_features = pd.DataFrame({
-          #             'body_len': [len(cleaned_text_data) - cleaned_text_data.count(" ")],
-          #             'punct%': [count_punct(cleaned_text_data)], 
-          #         })
-
-          #         # Combine features
-          #         text_features = pd.concat([text_features, tfidf_df], axis=1)
-                  
-          #         # Set columns to match the columns used during training
-          #         text_features.columns = ['body_len', 'punct%'] + [str(i) for i in range(44)]
-
-          #         # Predict with the model
-          #         prediction = rf_model.predict(text_features)
-
-          #         # Check if the predicted label is "spam" and add to suspicious_images list
-          #         if prediction[0] == "spam":
-          #             suspicious_images_text.append(f"{cleaned_text_data} can be suspicious")
-
-          #     # Display the list of suspicious images or the message if no images are suspicious
-          #     if not suspicious_images_text:
-          #         suspicious_images_text.append(f"No image text is suspicious.")
-          #         print("No image text is suspicious.")
-          #     else:
-          #         for suspicious_image in suspicious_images_text:
-          #             print(suspicious_image_text)
+        # # Save extracted texts in a text file
+        # result_file_path = 'result.txt'
+        # with open(result_file_path, 'w') as result_file:
+        #     for idx, text in enumerate(extracted_texts, 1):
+        #         result_file.write(f"Text from Image {idx}: {text}\n")
+        
+        # # NLP model Integration
+        # # Load the trained TF-IDF vectorizer
+        # with open('tfidf_vectorizer.pkl', 'rb') as file:
+        #     tfidf_vect_fit = tfidf_vectorizer.load(file)
+            
+        # # Load the trained Random Forest model
+        # with open('random_forest_model.pkl', 'rb') as file:
+        #     rf_model = pickle.load(file)
 
 
-          # Combine SSL info and ML prediction into a single dictionary
-          analysis_result = {
-              'Url': url,
-              'SSL Info': ssl_info,
-              'Is Domain Legitimate': is_domain_legitimate,
-              'Is Certificate Valid': is_certificate_valid,
-              'Is HTTPS': is_https,
-              'URL Analyzer Result': url_analyzer_result,
-              'Hyperlinks': all_urls,
-              # 'Suspicious Images Content': suspicious_images_text
-              'Suspicious Images Content': []
-          }
-          print(analysis_result)
-          return jsonify(analysis_result)
+
+        # # Load the text from the file
+        # file_path = "result.txt"  
+        # with open(file_path, "r") as file:
+        #     text_data = file.readlines()
+
+        # # Check if the text file is empty
+        # if not text_data:
+        #     print("Image text is empty.")
+        # else:
+        #     # Initialize an empty list to store suspicious images
+        #     suspicious_images_text = []
+
+        #     # Preprocess and predict for each text
+        #     for i, text in enumerate(text_data):
+        #         # Preprocess the text data
+        #         cleaned_text_data = clean_text(text)
+
+        #         # Use the trained TF-IDF vectorizer
+        #         tfidf_values = tfidf_vect_fit.transform([cleaned_text_data])
+        #         tfidf_df = pd.DataFrame(tfidf_values.toarray(), columns=tfidf_vect_fit.get_feature_names_out())
+
+        #         # Create features
+        #         text_features = pd.DataFrame({
+        #             'body_len': [len(cleaned_text_data) - cleaned_text_data.count(" ")],
+        #             'punct%': [count_punct(cleaned_text_data)], 
+        #         })
+
+        #         # Combine features
+        #         text_features = pd.concat([text_features, tfidf_df], axis=1)
+                
+        #         # Set columns to match the columns used during training
+        #         text_features.columns = ['body_len', 'punct%'] + [str(i) for i in range(44)]
+
+        #         # Predict with the model
+        #         prediction = rf_model.predict(text_features)
+
+        #         # Check if the predicted label is "spam" and add to suspicious_images list
+        #         if prediction[0] == "spam":
+        #             suspicious_images_text.append(f"{cleaned_text_data} can be suspicious")
+
+        #     # Display the list of suspicious images or the message if no images are suspicious
+        #     if not suspicious_images_text:
+        #         suspicious_images_text.append(f"No image text is suspicious.")
+        #         print("No image text is suspicious.")
+        #     else:
+        #         for suspicious_image in suspicious_images_text:
+        #             print(suspicious_image_text)
+
+
+        # Combine SSL info and ML prediction into a single dictionary
+        analysis_result = {
+            'Url': url,
+            'SSL Info': ssl_info,
+            'Is Domain Legitimate': is_domain_legitimate,
+            'Is Certificate Valid': is_certificate_valid,
+            'Is HTTPS': is_https,
+            'URL Analyzer Result': url_analyzer_result,
+            'Hyperlinks': all_urls,
+            # 'Suspicious Images Content': suspicious_images_text
+            'Suspicious Images Content': []
+        }
+        print(analysis_result)
+        return jsonify(analysis_result)
     except Exception as e:
         return jsonify({'error': str(e)})
 

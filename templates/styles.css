@@ -17,7 +17,7 @@ h1 {
 }
 
 #urlInput {
-    width: 100%;
+    width: 80%;
 }
 
 #urlHelp {
@@ -188,6 +188,6 @@ body {
 }
 
 .background-image {
-    width: 100%;
+    width: 80%;
     height: auto;
 }
