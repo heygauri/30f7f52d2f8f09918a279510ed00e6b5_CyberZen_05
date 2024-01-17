@@ -14,6 +14,7 @@ $(document).ready(function() {
         // Validate the URL using a simple regex
         if (isValidUrl(url)) {
             analyzeWebsite(url);
+            $('.plz').hide();
         } else {
             $('#urlHelp').text("Please enter a valid URL.");
             alert('Please enter a valid URL.');
@@ -167,7 +168,7 @@ function displayResult(result) {
     
     if (result.Hyperlinks && result.Hyperlinks.length > 0) {
         // 'Hyperlinks' data is available, so display the HTML block
-        $('.url-container').html('<h2 class="lead" style="display: inline-block; margin-right: 10px;">Extracted URL\'s</h2><div class="url-container"></div>');
+        $('.url-container').html('<h2 class="lead" style="display: inline-block; margin-right: 10px;"></h2><div class="url-container"></div>');
 
         // Update the content of '.urls-container' with the hyperlinks
         displayUrls(result.Hyperlinks);
@@ -187,19 +188,21 @@ function displayResult(result) {
     //     $('.suspicious-images-content').hide();
     // }
 
-    if (result['Suspicious Images Content']) {
-        // 'Suspicious Images Content' data is available, so display the HTML block
-    
-        // Assuming result['Suspicious Images Content'] is an array of sentences
+    if (result['Suspicious Images Content'] && result['Prediction Probability']) {
+        // result['Suspicious Images Content'] is an array of sentences
         const sentences = result['Suspicious Images Content'].map(sentence => {
-            // Extract the sentence from the string
-            // const startIndex = sentence.indexOf(':') + 1;
-            const extractedSentence = sentence.substring(startIndex).trim();
-            return extractedSentence;
+            return sentence;
         });
     
-        const sentencesHTML = sentences.map(sentence => `<p>${sentence}</p>`).join('');
-        $('.suspicious-images-content').html('<h2 class="lead" style="display: inline-block; margin-right: 10px;">Suspicious Images Content</h2><div class="suspicious-images-content">' + sentencesHTML + '</div>');
+        const probabilities = result['Prediction Probability'].map(probability => {
+            return probability;
+        });
+    
+        const sentencesHTML = sentences.map((sentence, index) => {
+            return `<p>${sentence} <br> ${probabilities[index]}</p>`;
+        }).join('');
+    
+        $('.suspicious-images-content').html('<h2 class="lead" style="display: inline-block; margin-right: 10px;"></h2><div class="suspicious-images-content">' + sentencesHTML + '</div>');
     } else {
         // 'Suspicious Images Content' data is not available, so hide the HTML block
         $('.suspicious-images-content-heading').hide();

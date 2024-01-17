@@ -739,7 +739,8 @@ def analyze():
             'Is HTTPS': False,
             'URL Analyzer Result': url_analyzer_result,
             'Hyperlinks': [],
-            'Suspicious Images Content': []
+            'Suspicious Images Content': [],
+            'Prediction Probability': []
             }
 
             print(analysis_result)
@@ -808,18 +809,20 @@ def analyze():
             print("This URL uses HTTP.")
 
         if url_analyzer_result['Is Website Fake']:
-              analysis_result = {
-                  'Url': url,
-                  'SSL Info': ssl_info,
-                  'Is Domain Legitimate': is_domain_legitimate,
-                  'Is Certificate Valid': is_certificate_valid,
-                  'Is HTTPS': is_https,
-                  'URL Analyzer Result': url_analyzer_result,
-                  'Hyperlinks': extract_all_urls_dynamic(url),
-                  'Suspicious Images Content': []
-              }
-              print(analysis_result)
-              return jsonify(analysis_result)
+            analysis_result = {
+                'Url': url,
+                'SSL Info': ssl_info,
+                'Is Domain Legitimate': is_domain_legitimate,
+                'Is Certificate Valid': is_certificate_valid,
+                'Is HTTPS': is_https,
+                'URL Analyzer Result': url_analyzer_result,
+                'Hyperlinks': extract_all_urls_dynamic(url),
+                'Suspicious Images Content': [],
+                'Prediction Probability': []
+            }
+
+            print(analysis_result)
+            return jsonify(analysis_result)
          
         # Retrieving all hyperlinks present on the url
         target_website_url = url
@@ -854,6 +857,7 @@ def analyze():
         loaded_model_6 = tf.keras.models.load_model("model_6_savedmodel")
         
         suspicious_images_text = []
+        prediction_probability = []
 
         # Assuming you have a text file named "your_text_file.txt" with one sentence per line
         with open("result.txt", "r") as file:
@@ -868,6 +872,7 @@ def analyze():
                     print(f"This sentence is suspicioius: {line.strip()}")
                     suspicious_images_text.append(f"This sentence is suspicioius: {line.strip()}")
                     print(f"Prediction Probability: {pred_prob[0][0]}")
+                    prediction_probability.append(f"Prediction Probability: {pred_prob[0][0]}")
                     print("------------------------------")
 
         # Display the list of suspicious images or the message if no images are suspicious
@@ -888,7 +893,8 @@ def analyze():
             'Is HTTPS': is_https,
             'URL Analyzer Result': url_analyzer_result,
             'Hyperlinks': all_urls,
-            'Suspicious Images Content': suspicious_images_text
+            'Suspicious Images Content': suspicious_images_text,
+            'Prediction Probability': prediction_probability
         }
         print(analysis_result)
         return jsonify(analysis_result)

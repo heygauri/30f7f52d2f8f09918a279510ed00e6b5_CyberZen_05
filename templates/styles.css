@@ -142,15 +142,15 @@ header {
     color: #fff; /* Adjust the text color */
 }
 .header-logo img{
-    max-width: 40px; /* Adjust the max-width of the logo */
+    max-width: 150px; /* Adjust the max-width of the logo */
     height: auto;
 }
 .header-buttons {
     display: flex;
-    margin-right: 100px;
+    margin-right: 70px;
 }
 .header-buttons a {
-    margin-left: 20px;
+    margin-left: 25px;
     text-decoration: none;
     color: #fff; /* Adjust the button text color */
 }

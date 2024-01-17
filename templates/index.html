@@ -8,12 +8,61 @@
     <title>Website Analyzer</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="styles.css">
+    <style>
+        .expanded-container {
+            display: flex;
+            justify-content: space-between;
+            /* align-items: center; */
+            height: 200px; /* Fixed height */
+            padding: 5px;
+            margin-top: 20px;
+            margin-right: 90px;
+            margin: 0;
+            padding: 0;
+            width: 100%;
+        }
+
+        .plz img {
+            height: 100%;
+        }
+        .url-form {
+            display: flex;
+            align-items: center;
+        }
+
+        label {
+            margin-right: 10px;
+        }
+
+        .input-container {
+            display: flex;
+            align-items: center;
+        }
+
+        #urlInput {
+            width: 350px; /* Set a width for the input as needed */
+        }
+
+        #editButton {
+            margin-left: 5px;
+            background: none;
+            border: none;
+            font-size: 1em;
+            cursor: pointer;
+        }
+
+        #submitButton {
+            margin-left: 10px;
+            padding: 5px 10px;
+            cursor: pointer;
+        }
+    </style>
 </head>
 <body>
 
     <header>
         <div class="header-logo">
-            <img src="/home/sumitra/opensource/heygauri/30f7f52d2f8f09918a279510ed00e6b5_CyberZen_05/images/logo.png" alt="Logo">
+            <img src="/home/sumitra/opensource/30f7f52d2f8f09918a279510ed00e6b5_CyberZen_05/images/rajasthan_police.jpeg" alt="Logo">
         </div>
         <div class="header-buttons">
             <a href="index.html">Home</a>
@@ -22,43 +71,56 @@
             <a href="blog.html">Do's & Dont's</a>
             <a href="feedback.html">Feedback</a>
             <a href="admin-login.html">Admin Login</a>
+            <a href="https://cybercrime.gov.in/" class="call-icon">&#9742; 1930</a>
         </div>
     </header>
-    <div style="margin-left: 90px;">
+
+    <div style="margin-left: 90px; text-align: center;">
         <div class="container1 custom-container">
             <div class="horizontal-container">
                 <img class="background-image" src="/home/sumitra/opensource/heygauri/30f7f52d2f8f09918a279510ed00e6b5_CyberZen_05/images/nobackgroud-removebg.png" alt="Background Image">
             </div>
         
-        <form id="urlForm">
-            <div class="form-group">
-                <label for="urlInput">Enter URL:</label>
+            <!-- <form id="urlForm">
+                <div class="form-group">
+                    <label for="urlInput">Enter URL:</label>
+                        <input type="url" class="form-control" id="urlInput" placeholder="https://example.com" required>
+                        <small id="urlHelp" class="form-text text-muted"></small>
+                    </div>
+                <button type="submit" class="btn btn-primary" id="analyzeButton">Analyze</button>
+                <input type="url" class="form-control" id="editInput" placeholder="Enter new URL" style="display: none;">
+                <button type="submit" class="btn btn-primary" id="editButton">Edit</button>
+            </form> -->
+            <div class="url-form" style="text-align: center;">
+                <label for="urlInput" style="margin-left: 50px;">Enter URL:
+                </label>
                 <input type="url" class="form-control" id="urlInput" placeholder="https://example.com" required>
                 <small id="urlHelp" class="form-text text-muted"></small>
+                <!-- <span class="edit-button" id="editButton">&#9998;</span> -->
+                <input type="url" class="form-control" id="editInput" placeholder="Enter new URL" style="display: none;">
+                <button type="submit" class="btn btn-primary" id="analyzeButton">Analyze</button>
             </div>
-            <button type="submit" class="btn btn-primary" id="analyzeButton">Analyze</button>
-            <input type="url" class="form-control" id="editInput" placeholder="Enter new URL" style="display: none;">
-            <button type="submit" class="btn btn-primary" id="editButton">Edit</button>
-        </form>
-    </div>
-    
-    <br>
-    
-    <div class="plz" style="display: flex; justify-content: flex-end; align-items: center; height:250px; padding: 5px; margin-top: 20px; ">
-        <img src="/home/sumitra/opensource/heygauri/30f7f52d2f8f09918a279510ed00e6b5_CyberZen_05/images/1.jpeg" alt="Logo" style="height: 100%; margin-left: -250px;">
-        
-        <img src="/home/sumitra/opensource/heygauri/30f7f52d2f8f09918a279510ed00e6b5_CyberZen_05/images/2.jpeg" alt="Logo" style="height: 100%; margin-left: 30px;margin-right: 30px;">
-    
-        <img src="/home/sumitra/opensource/heygauri/30f7f52d2f8f09918a279510ed00e6b5_CyberZen_05/images/3.jpeg" alt="Logo" style="height: 100%; margin-right: -250px;">
-    </div>
-    
-   
-    </div>
-    <form>
-    <div>
-        <label for="urlInput">Enter URL:</label>
+            
         </div>
-        </form>
+        <br><br>
+        <div class="expanded-container" style="margin-right: 10px;">
+            <div class="plz">
+                <img src="/home/sumitra/opensource/30f7f52d2f8f09918a279510ed00e6b5_CyberZen_05/images/1.jpeg" alt="Image 1">
+                <img src="/home/sumitra/opensource/30f7f52d2f8f09918a279510ed00e6b5_CyberZen_05/images/2.jpeg" alt="Image 2">
+                <img src="/home/sumitra/opensource/30f7f52d2f8f09918a279510ed00e6b5_CyberZen_05/images/3.jpeg" alt="Image 3">
+            </div>
+        </div>
+    </div>
+
+
+    <!-- <div class="expanded-container">
+        <div class="plz">
+            <img src="/home/sumitra/opensource/30f7f52d2f8f09918a279510ed00e6b5_CyberZen_05/images/1.jpeg" alt="Image 1">
+            <img src="/home/sumitra/opensource/30f7f52d2f8f09918a279510ed00e6b5_CyberZen_05/images/2.jpeg" alt="Image 2">
+            <img src="/home/sumitra/opensource/30f7f52d2f8f09918a279510ed00e6b5_CyberZen_05/images/3.jpeg" alt="Image 3">
+        </div>
+    </div> -->
+        
     
     <div id="resultContainer" class="container2 mt-4" style="display: none;">
         <h1>Analysis Result</h1><br>
@@ -184,6 +246,7 @@
             <p class="suspicious-images-content"></p>
         </div>
     </div><br>
+    
 
     <footer>
         <div class="footer-links">
