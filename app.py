@@ -717,6 +717,88 @@ def get_certificate_information(url):
         print('Certificate information retrieval error')
         return {}
 
+@app.route('/hyperlinks', methods=['POST'])
+def hyperlinks():
+    try:
+        # Retrieving all hyperlinks present on the url
+        target_website_url = request.form['url']
+        all_urls = extract_all_urls_dynamic(target_website_url)
+        hyperlink_result = {
+            'Hyperlinks': all_urls
+        }
+        print(hyperlink_result)
+        return jsonify(hyperlink_result)
+    except Exception as e:
+        return jsonify({'error': str(e)})
+
+@app.route('/suspicious', methods=['POST'])
+def suspicious():
+    try:
+        target_url = request.form['url']
+
+        # tensorflow NLP model integration
+        # Unzip the folder
+        # zip_path = 'model_6_savedmodel.zip'
+        extract_path = 'model_6_savedmodel'
+        # with zipfile.ZipFile(zip_path, 'r') as zip_ref:
+        #     zip_ref.extractall(extract_path)
+
+        # Load the model
+        loaded_model = tf.keras.models.load_model(extract_path)
+
+        # Now you can use the loaded_model
+        loaded_model_6 = tf.keras.models.load_model("model_6_savedmodel")
+        
+        suspicious_images_text = []
+        prediction_probability = []
+
+        # Retrieving Images present on the url
+        html_content, base_url = extract_urls_with_selenium(target_url)
+        image_urls = extract_image_urls(html_content, base_url)
+        extracted_texts = extract_text_from_images(image_urls, 7)
+
+        # Save extracted texts in a text file
+        result_file_path = 'result.txt'
+        with open(result_file_path, 'w') as result_file:
+            for idx, text in enumerate(extracted_texts, 1):
+                result_file.write(f"{text}\n")
+        
+
+        # Assuming you have a text file named "your_text_file.txt" with one sentence per line
+        with open("result.txt", "r") as file:
+            for line in file:
+                # Use the loaded model to make predictions without printing progress
+                pred_prob = loaded_model_6.predict([line], verbose=0)
+                pred_label = tf.squeeze(tf.round(pred_prob)).numpy()
+
+                # Print the prediction if the label is 1
+                if pred_label == 1:
+                    print("Predicted Label: Spam")
+                    print(f"This sentence is suspicioius: {line.strip()}")
+                    suspicious_images_text.append(f"This sentence is suspicioius: {line.strip()}")
+                    print(f"Prediction Probability: {pred_prob[0][0]}")
+                    prediction_probability.append(f"Prediction Probability: {pred_prob[0][0]}")
+                    print("------------------------------")
+
+        # Display the list of suspicious images or the message if no images are suspicious
+            if not suspicious_images_text:
+                suspicious_images_text.append(f"No image text found to be suspicious.")
+                suspicious_images_text.append(f"")
+                print("No image text is suspicious.")
+            else:
+                for suspicious_image in suspicious_images_text:
+                    print(suspicious_image)
+
+        # Combine SSL info and ML prediction into a single dictionary
+
+        suspicious_result = {
+            'Suspicious Images Content': suspicious_images_text,
+            'Prediction Probability': prediction_probability
+        }
+        print(suspicious_result)
+        return jsonify(suspicious_result)
+    except Exception as e:
+        return jsonify({'error': str(e)})
 
 @app.route('/analyze', methods=['POST'])
 def analyze():
@@ -737,10 +819,7 @@ def analyze():
             'Is Domain Legitimate': False,
             'Is Certificate Valid': False,
             'Is HTTPS': False,
-            'URL Analyzer Result': url_analyzer_result,
-            'Hyperlinks': [],
-            'Suspicious Images Content': [],
-            'Prediction Probability': []
+            'URL Analyzer Result': url_analyzer_result
             }
 
             print(analysis_result)
@@ -750,12 +829,10 @@ def analyze():
         valid_until = ssl_info['Valid Until']
         protocol = ssl_info['Protocol']
         domain_info = ssl_info['Domain Info']
-      
+
         # Assuming 'valid_from' and 'valid_until' are keys in domain_info
         valid_from = domain_info.get('creation_date', None)
         valid_until = domain_info.get('expiration_date', None)
-        print("\n valid_from = ", valid_from);
-        print("\n valid_until = ", valid_until);
 
         # Handle expiration_date
         expiration_date = domain_info.get('expiration_date', None)
@@ -781,16 +858,17 @@ def analyze():
         # Handle valid_from and valid_until
         if valid_from is not None and valid_until is not None:
             try:
-                print("\n valid_from_date = ", valid_from)
-                print("\n valid_until_date = ", valid_until)
-
                 current_date = datetime.now()
-                is_certificate_valid = current_date >= valid_from and current_date <= valid_until
+                valid_from_date = datetime.strptime(str(valid_from), '%Y-%m-%d %H:%M:%S')
+                valid_until_date = datetime.strptime(str(valid_until), '%Y-%m-%d %H:%M:%S')
+
+                is_certificate_valid = current_date >= valid_from_date and current_date <= valid_until_date
             except ValueError:
                 print("Error: Invalid date format for certificate validity.")
                 is_certificate_valid = False
         else:
             is_certificate_valid = False
+
 
         if is_certificate_valid:
             print("The certificate is valid.")
@@ -815,73 +893,70 @@ def analyze():
                 'Is Domain Legitimate': is_domain_legitimate,
                 'Is Certificate Valid': is_certificate_valid,
                 'Is HTTPS': is_https,
-                'URL Analyzer Result': url_analyzer_result,
-                'Hyperlinks': extract_all_urls_dynamic(url),
-                'Suspicious Images Content': [],
-                'Prediction Probability': []
+                'URL Analyzer Result': url_analyzer_result
             }
 
             print(analysis_result)
             return jsonify(analysis_result)
          
-        # Retrieving all hyperlinks present on the url
-        target_website_url = url
-        all_urls = extract_all_urls_dynamic(target_website_url)
+        # # Retrieving all hyperlinks present on the url
+        # target_website_url = url
+        # all_urls = extract_all_urls_dynamic(target_website_url)
 
 # -------Third Subsystem--------------------------------------------
 
-        # Retrieving Images present on the url
-        target_url = url
-        html_content, base_url = extract_urls_with_selenium(target_url)
-        image_urls = extract_image_urls(html_content, base_url)
-        extracted_texts = extract_text_from_images(image_urls, 10)
+        # # Retrieving Images present on the url
+        # target_url = url
+        # html_content, base_url = extract_urls_with_selenium(target_url)
+        # image_urls = extract_image_urls(html_content, base_url)
+        # extracted_texts = extract_text_from_images(image_urls, 10)
 
-        # Save extracted texts in a text file
-        result_file_path = 'result.txt'
-        with open(result_file_path, 'w') as result_file:
-            for idx, text in enumerate(extracted_texts, 1):
-                result_file.write(f"{text}\n")
+        # # Save extracted texts in a text file
+        # result_file_path = 'result.txt'
+        # with open(result_file_path, 'w') as result_file:
+        #     for idx, text in enumerate(extracted_texts, 1):
+        #         result_file.write(f"{text}\n")
         
-        # tensorflow NLP model integration
-        # Unzip the folder
-        # zip_path = 'model_6_savedmodel.zip'
-        extract_path = 'model_6_savedmodel'
+        # # tensorflow NLP model integration
+        # # Unzip the folder
+        # # zip_path = 'model_6_savedmodel.zip'
+        # extract_path = 'model_6_savedmodel'
 
-        # with zipfile.ZipFile(zip_path, 'r') as zip_ref:
-        #     zip_ref.extractall(extract_path)
+        # # with zipfile.ZipFile(zip_path, 'r') as zip_ref:
+        # #     zip_ref.extractall(extract_path)
 
-        # Load the model
-        loaded_model = tf.keras.models.load_model(extract_path)
+        # # Load the model
+        # loaded_model = tf.keras.models.load_model(extract_path)
 
-        # Now you can use the loaded_model
-        loaded_model_6 = tf.keras.models.load_model("model_6_savedmodel")
+        # # Now you can use the loaded_model
+        # loaded_model_6 = tf.keras.models.load_model("model_6_savedmodel")
         
-        suspicious_images_text = []
-        prediction_probability = []
+        # suspicious_images_text = []
+        # prediction_probability = []
 
-        # Assuming you have a text file named "your_text_file.txt" with one sentence per line
-        with open("result.txt", "r") as file:
-            for line in file:
-                # Use the loaded model to make predictions without printing progress
-                pred_prob = loaded_model_6.predict([line], verbose=0)
-                pred_label = tf.squeeze(tf.round(pred_prob)).numpy()
+        # # Assuming you have a text file named "your_text_file.txt" with one sentence per line
+        # with open("result.txt", "r") as file:
+        #     for line in file:
+        #         # Use the loaded model to make predictions without printing progress
+        #         pred_prob = loaded_model_6.predict([line], verbose=0)
+        #         pred_label = tf.squeeze(tf.round(pred_prob)).numpy()
 
-                # Print the prediction if the label is 1
-                if pred_label == 1:
-                    print("Predicted Label: Spam")
-                    print(f"This sentence is suspicioius: {line.strip()}")
-                    suspicious_images_text.append(f"This sentence is suspicioius: {line.strip()}")
-                    print(f"Prediction Probability: {pred_prob[0][0]}")
-                    prediction_probability.append(f"Prediction Probability: {pred_prob[0][0]}")
-                    print("------------------------------")
+        #         # Print the prediction if the label is 1
+        #         if pred_label == 1:
+        #             print("Predicted Label: Spam")
+        #             print(f"This sentence is suspicioius: {line.strip()}")
+        #             suspicious_images_text.append(f"This sentence is suspicioius: {line.strip()}")
+        #             print(f"Prediction Probability: {pred_prob[0][0]}")
+        #             prediction_probability.append(f"Prediction Probability: {pred_prob[0][0]}")
+        #             print("------------------------------")
 
-        # Display the list of suspicious images or the message if no images are suspicious
-            if not suspicious_images_text:
-                suspicious_images_text.append(f"No image text found to be suspicious.")
-                print("No image text is suspicious.")
-            else:
-                for suspicious_image in suspicious_images_text:
-                    print(suspicious_image)
+        # # Display the list of suspicious images or the message if no images are suspicious
+        #     if not suspicious_images_text:
+        #         suspicious_images_text.append(f"No image text found to be suspicious.")
+        #         print("No image text is suspicious.")
+        #     else:
+        #         for suspicious_image in suspicious_images_text:
+        #             print(suspicious_image)
 
         # Combine SSL info and ML prediction into a single dictionary
 
@@ -891,10 +966,7 @@ def analyze():
             'Is Domain Legitimate': is_domain_legitimate,
             'Is Certificate Valid': is_certificate_valid,
             'Is HTTPS': is_https,
-            'URL Analyzer Result': url_analyzer_result,
-            'Hyperlinks': all_urls,
-            'Suspicious Images Content': suspicious_images_text,
-            'Prediction Probability': prediction_probability
+            'URL Analyzer Result': url_analyzer_result
         }
         print(analysis_result)
         return jsonify(analysis_result)

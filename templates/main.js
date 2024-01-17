@@ -5,16 +5,23 @@ $('#editButton').click(function () {
 });
 
 
-$(document).ready(function() {
-    $('#urlForm').submit(function(event) {
+$(document).ready(function () {
+    $('.url-form').submit(function (event) {
         event.preventDefault();
         $('#analyzeButton').prop('disabled', true);
         const url = $('#urlInput').val();
 
         // Validate the URL using a simple regex
         if (isValidUrl(url)) {
+            $('.expanded-container').hide();
+            $('.container1').hide();
+            // Update other HTML content as needed
+            $('.url').text(url);
             analyzeWebsite(url);
-            $('.plz').hide();
+            hyperlinkFetcher(url);
+            suspiciousContent(url);
+            $('.custom-container').css("max-width", "500px");
+
         } else {
             $('#urlHelp').text("Please enter a valid URL.");
             alert('Please enter a valid URL.');
@@ -26,6 +33,66 @@ function isValidUrl(url) {
     // Simple URL validation using a regular expression
     const urlRegex = /^(https?|ftp):\/\/[^\s/$.?#].[^\s]*$/;
     return urlRegex.test(url);
+}
+
+function hyperlinkFetcher(url) {
+    $.ajax({
+        type: 'POST',
+        url: 'http://127.0.0.1:5000/hyperlinks',
+        data: {url: url},
+        success: function(response) {
+            if (response.Hyperlinks && response.Hyperlinks.length > 0) {
+                // 'Hyperlinks' data is available, so display the HTML block
+                $('.url-container').html('<h2 class="lead" style="display: inline-block; margin-right: 10px;"></h2><div class="url-container"></div>');
+        
+                // Update the content of '.urls-container' with the hyperlinks
+                displayUrls(response.Hyperlinks);
+            } else {
+                // 'Hyperlinks' data is not available, so hide the HTML block
+                $('.urls-container-heading').hide();
+                $('.urls-container').hide();
+            }
+        },
+        error: function(error) {
+            console.error(error);
+            alert('An error occurred fetching hyperlinks.');
+        }
+    });
+}
+
+function suspiciousContent(url) {
+    $.ajax({
+        type: 'POST',
+        url: 'http://127.0.0.1:5000/suspicious',
+        data: {url: url},
+        success: function(response) {
+            //console.log(response);
+            if (response['Suspicious Images Content'] && response['Prediction Probability']) {
+                // result['Suspicious Images Content'] is an array of sentences
+                const sentences = response['Suspicious Images Content'].map(sentence => {
+                    return sentence;
+                });
+            
+                const probabilities = response['Prediction Probability'].map(probability => {
+                    return probability;
+                });
+            
+                const sentencesHTML = sentences.map((sentence, index) => {
+                    return `<p>${sentence} <br> ${probabilities[index]}</p>`;
+                }).join('');
+            
+                $('.suspicious-images-content').html('<h2 class="lead" style="display: inline-block; margin-right: 10px;"></h2><div class="suspicious-images-content">' + sentencesHTML + '</div>');
+            } else {
+                // 'Suspicious Images Content' data is not available, so hide the HTML block
+                $('.suspicious-images-content-heading').hide();
+                $('.suspicious-images-content').hide();
+            }
+        },
+        error: function(error) {
+            console.error(error);
+            alert('An error occurred during suspicious content analysis.');
+        }
+    });
 }
 
 function analyzeWebsite(url) {
@@ -105,9 +172,6 @@ function displayResult(result) {
         $('.ssl-info-valid-from').text(sslInfo['Valid From'] || 'N/A');
         $('.ssl-info-valid-until').text(sslInfo['Valid Until'] || 'N/A');
     }
-
-    // Update other HTML content as needed
-    $('.url').text(result.Url || 'N/A');
     
     if(result['Is Domain Legitimate']) {
         $('.isDomainLegitimate').addClass('legitimate').removeClass('phishing');
@@ -165,50 +229,6 @@ function displayResult(result) {
         console.error('Error:', error);
         // Handle error, show error message, etc.
     });
-    
-    if (result.Hyperlinks && result.Hyperlinks.length > 0) {
-        // 'Hyperlinks' data is available, so display the HTML block
-        $('.url-container').html('<h2 class="lead" style="display: inline-block; margin-right: 10px;"></h2><div class="url-container"></div>');
-
-        // Update the content of '.urls-container' with the hyperlinks
-        displayUrls(result.Hyperlinks);
-    } else {
-        // 'Hyperlinks' data is not available, so hide the HTML block
-        $('.urls-container-heading').hide();
-        $('.urls-container').hide();
-    }
-    console.log(result['Suspicious Images Content'])
-    // // Display Suspicious Images Content
-    // if (result['Suspicious Images Content']) {
-    //     // 'Suspicious Images Content' data is available, so display the HTML block
-    //     $('.suspicious-images-content').html('<h2 class="lead" style="display: inline-block; margin-right: 10px;">Suspicious Images Content</h2><div class="suspicious-images-content">' + result['Suspicious Images Content'] + '</div>');
-    // } else {
-    //     // 'Suspicious Images Content' data is not available, so hide the HTML block
-    //     $('.suspicious-images-content-heading').hide();
-    //     $('.suspicious-images-content').hide();
-    // }
-
-    if (result['Suspicious Images Content'] && result['Prediction Probability']) {
-        // result['Suspicious Images Content'] is an array of sentences
-        const sentences = result['Suspicious Images Content'].map(sentence => {
-            return sentence;
-        });
-    
-        const probabilities = result['Prediction Probability'].map(probability => {
-            return probability;
-        });
-    
-        const sentencesHTML = sentences.map((sentence, index) => {
-            return `<p>${sentence} <br> ${probabilities[index]}</p>`;
-        }).join('');
-    
-        $('.suspicious-images-content').html('<h2 class="lead" style="display: inline-block; margin-right: 10px;"></h2><div class="suspicious-images-content">' + sentencesHTML + '</div>');
-    } else {
-        // 'Suspicious Images Content' data is not available, so hide the HTML block
-        $('.suspicious-images-content-heading').hide();
-        $('.suspicious-images-content').hide();
-    }
-
 
     $('#resultContainer').show();
 }
