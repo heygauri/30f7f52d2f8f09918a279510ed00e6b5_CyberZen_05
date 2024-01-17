@@ -112,15 +112,23 @@ h1 {
 .icon.phishing::before {
     content: "\2717";
 }
+
 .suspicious-images-content {
-    border: 1px solid #ddd;
-    padding: 10px;
-    max-height: 200px;
-    overflow-y: auto;
-    margin-top: 10px; /* Adjust margin as needed */
-    background-color: #f8f9fa; /* Optional background color */
-    color: #343a40; /* Optional text color */
+    margin-top: 20px;
+    max-height: 450px; /* Set a maximum height for the container */
+    max-width: 950px;
+    overflow-y: auto; /* Add vertical scrollbar if content overflows */
+}
+
+.suspicious-images-content p {
+    margin-bottom: 5px;
+    white-space: nowrap; /* Prevent line breaks */
+    overflow: auto;
     text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 4; 
+    -webkit-box-orient: vertical;
+    word-wrap: break-word;
 }
 header {
     display: flex;
@@ -188,6 +196,6 @@ body {
 }
 
 .background-image {
-    width: 80%;
+    width: 70%;
     height: auto;
 }

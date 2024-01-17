@@ -1,6 +1,9 @@
 // admin-login.js
 
 $(document).ready(function () {
+    // Hide result container initially
+    $("#resultContainer").hide();
+
     // Submit login form
     $("#loginForm").submit(function (event) {
         event.preventDefault();
@@ -42,6 +45,8 @@ $(document).ready(function () {
     // Clear login form
     $("#clearButton").click(function () {
         $("#loginForm")[0].reset();
+        // Hide the result container when the form is cleared
+        $("#resultContainer").hide();
     });
 
     // Handle clicks on data buttons

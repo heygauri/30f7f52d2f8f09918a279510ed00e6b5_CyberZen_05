@@ -19,6 +19,9 @@ import json
 import ssl
 import re
 
+import tensorflow as tf
+import zipfile
+import os
 
 import string
 from sklearn.feature_extraction.text import TfidfVectorizer
@@ -29,7 +32,6 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from bs4 import BeautifulSoup
 import sys
-import os
 import requests
 from urllib.parse import urljoin
 from bs4 import BeautifulSoup
@@ -74,6 +76,10 @@ CORS(app)
 
 # # Secret key for session
 # app.secret_key = secret_key
+
+import tensorflow as tf
+print("Num GPUs Available: ", len(tf.config.experimental.list_physical_devices('GPU')))
+
 
 # Login route
 @app.route('/admin-login', methods=['GET', 'POST'])
@@ -174,27 +180,84 @@ def extract_text_from_image(image_path):
         print(f"Error extracting text from image {image_path}: {e}")
         return None
 
-def extract_text_from_images(image_urls, max_images=30):
+from pathlib import Path
+
+# def extract_text_from_images(image_urls, max_images=10):
+  
+#     extracted_texts = []
+    
+#     # Process images in batches
+#     batch_size = 4 
+#     count = 0
+#     for i in range(0, len(image_urls), batch_size):
+#         batch_paths = []
+        
+#         for idx, image_url in enumerate(image_urls[i:i+batch_size]):
+            
+#             if idx >= max_images: 
+#                 break
+                
+#             # Download image
+#             save_path = f'Extracted_Images/{idx}_{os.path.basename(image_url)}'            
+#             downloaded_image_path = download_image(image_url, save_path)
+            
+#             if downloaded_image_path:
+#                 extracted_text = extract_text_from_image(downloaded_image_path)
+
+#                 if extracted_text:
+#                   extracted_texts.append(extracted_text)
+#                   count = count+1
+#                   print(extracted_text)
+
+#                 # Delete the downloaded image
+#                 os.remove(downloaded_image_path)
+          
+#     return extracted_texts
+
+def extract_text_from_images(image_urls, max_images):
     extracted_texts = []
+    
+    # Process images in batches
+    batch_size = 4
+    count = 0
+    
+    for i in range(0, len(image_urls), batch_size):
+        batch_paths = []
+        
+        for idx, image_url in enumerate(image_urls[i:i+batch_size]):
+            
+            if count >= max_images:
+                break
+            
+            # Download image
+            save_path = f'Extracted_Images/{idx}_{os.path.basename(image_url)}'            
+            downloaded_image_path = download_image(image_url, save_path)
+            
+            if downloaded_image_path:
+                extracted_text = extract_text_from_image(downloaded_image_path)
 
-    for idx, image_url in enumerate(image_urls, 1):
-        if idx > max_images:
-            break  # Stop processing after reaching the maximum number of images
+                if extracted_text:
+                    extracted_texts.append(extracted_text)
+                    count += 1
+                    print(extracted_text)
 
-        # Download the image
-        save_path = f'Extracted_Images/{idx}_{os.path.basename(image_url)}'
-        downloaded_image_path = download_image(image_url, save_path)
+                # Delete the downloaded image
+                os.remove(downloaded_image_path)
 
-        if downloaded_image_path:
-            extracted_text = extract_text_from_image(downloaded_image_path)
-            if extracted_text:
-                extracted_texts.append(extracted_text)
-                print(extracted_text)
-
-            # Delete the downloaded image
-            os.remove(downloaded_image_path)
-
+        if count >= max_images:
+            break
+    
     return extracted_texts
+
+
+def extract_text_batch(image_paths):
+
+    # Load batch of images 
+    batch_images = load_images(image_paths)    
+    predictions = model(batch_images)
+    
+    # Extract text from predictions
+    return text_extractor(predictions)
 
 def extract_urls_with_selenium(url):
     driver = initialize_driver()
@@ -762,79 +825,61 @@ def analyze():
         target_website_url = url
         all_urls = extract_all_urls_dynamic(target_website_url)
 
-        # # Retrieving Images present on the url
-        # target_url = url
-        # html_content, base_url = extract_urls_with_selenium(target_url)
-        # image_urls = extract_image_urls(html_content, base_url)
-        # extracted_texts = extract_text_from_images(image_urls)
+# -------Third Subsystem--------------------------------------------
 
-        # # Save extracted texts in a text file
-        # result_file_path = 'result.txt'
-        # with open(result_file_path, 'w') as result_file:
-        #     for idx, text in enumerate(extracted_texts, 1):
-        #         result_file.write(f"Text from Image {idx}: {text}\n")
+        # Retrieving Images present on the url
+        target_url = url
+        html_content, base_url = extract_urls_with_selenium(target_url)
+        image_urls = extract_image_urls(html_content, base_url)
+        extracted_texts = extract_text_from_images(image_urls, 10)
+
+        # Save extracted texts in a text file
+        result_file_path = 'result.txt'
+        with open(result_file_path, 'w') as result_file:
+            for idx, text in enumerate(extracted_texts, 1):
+                result_file.write(f"{text}\n")
         
-        # # NLP model Integration
-        # # Load the trained TF-IDF vectorizer
-        # with open('tfidf_vectorizer.pkl', 'rb') as file:
-        #     tfidf_vect_fit = tfidf_vectorizer.load(file)
-            
-        # # Load the trained Random Forest model
-        # with open('random_forest_model.pkl', 'rb') as file:
-        #     rf_model = pickle.load(file)
+        # tensorflow NLP model integration
+        # Unzip the folder
+        zip_path = 'model_6_savedmodel.zip'
+        extract_path = 'model_6_savedmodel'
 
+        with zipfile.ZipFile(zip_path, 'r') as zip_ref:
+            zip_ref.extractall(extract_path)
 
+        # Load the model
+        loaded_model = tf.keras.models.load_model(extract_path)
 
-        # # Load the text from the file
-        # file_path = "result.txt"  
-        # with open(file_path, "r") as file:
-        #     text_data = file.readlines()
+        # Now you can use the loaded_model
+        loaded_model_6 = tf.keras.models.load_model("model_6_savedmodel")
+        
+        suspicious_images_text = []
 
-        # # Check if the text file is empty
-        # if not text_data:
-        #     print("Image text is empty.")
-        # else:
-        #     # Initialize an empty list to store suspicious images
-        #     suspicious_images_text = []
+        # Assuming you have a text file named "your_text_file.txt" with one sentence per line
+        with open("result.txt", "r") as file:
+            for line in file:
+                # Use the loaded model to make predictions without printing progress
+                pred_prob = loaded_model_6.predict([line], verbose=0)
+                pred_label = tf.squeeze(tf.round(pred_prob)).numpy()
 
-        #     # Preprocess and predict for each text
-        #     for i, text in enumerate(text_data):
-        #         # Preprocess the text data
-        #         cleaned_text_data = clean_text(text)
+                # Print the prediction if the label is 1
+                if pred_label == 1:
+                    print("Predicted Label: Spam")
+                    print(f"This sentence is suspicioius: {line.strip()}")
+                    suspicious_images_text.append(f"This sentence is suspicioius: {line.strip()}")
+                    print(f"Prediction Probability: {pred_prob[0][0]}")
+                    print("------------------------------")
 
-        #         # Use the trained TF-IDF vectorizer
-        #         tfidf_values = tfidf_vect_fit.transform([cleaned_text_data])
-        #         tfidf_df = pd.DataFrame(tfidf_values.toarray(), columns=tfidf_vect_fit.get_feature_names_out())
-
-        #         # Create features
-        #         text_features = pd.DataFrame({
-        #             'body_len': [len(cleaned_text_data) - cleaned_text_data.count(" ")],
-        #             'punct%': [count_punct(cleaned_text_data)], 
-        #         })
-
-        #         # Combine features
-        #         text_features = pd.concat([text_features, tfidf_df], axis=1)
-                
-        #         # Set columns to match the columns used during training
-        #         text_features.columns = ['body_len', 'punct%'] + [str(i) for i in range(44)]
-
-        #         # Predict with the model
-        #         prediction = rf_model.predict(text_features)
-
-        #         # Check if the predicted label is "spam" and add to suspicious_images list
-        #         if prediction[0] == "spam":
-        #             suspicious_images_text.append(f"{cleaned_text_data} can be suspicious")
-
-        #     # Display the list of suspicious images or the message if no images are suspicious
-        #     if not suspicious_images_text:
-        #         suspicious_images_text.append(f"No image text is suspicious.")
-        #         print("No image text is suspicious.")
-        #     else:
-        #         for suspicious_image in suspicious_images_text:
-        #             print(suspicious_image_text)
-
+        # Display the list of suspicious images or the message if no images are suspicious
+            if not suspicious_images_text:
+                suspicious_images_text.append(f"No image text found to be suspicious.")
+                print("No image text is suspicious.")
+            else:
+                for suspicious_image in suspicious_images_text:
+                    print(suspicious_image)
 
         # Combine SSL info and ML prediction into a single dictionary
+
         analysis_result = {
             'Url': url,
             'SSL Info': ssl_info,
@@ -843,8 +888,7 @@ def analyze():
             'Is HTTPS': is_https,
             'URL Analyzer Result': url_analyzer_result,
             'Hyperlinks': all_urls,
-            # 'Suspicious Images Content': suspicious_images_text
-            'Suspicious Images Content': []
+            'Suspicious Images Content': suspicious_images_text
         }
         print(analysis_result)
         return jsonify(analysis_result)
