@@ -176,26 +176,36 @@ function displayResult(result) {
         $('.urls-container-heading').hide();
         $('.urls-container').hide();
     }
+    console.log(result['Suspicious Images Content'])
+    // // Display Suspicious Images Content
+    // if (result['Suspicious Images Content']) {
+    //     // 'Suspicious Images Content' data is available, so display the HTML block
+    //     $('.suspicious-images-content').html('<h2 class="lead" style="display: inline-block; margin-right: 10px;">Suspicious Images Content</h2><div class="suspicious-images-content">' + result['Suspicious Images Content'] + '</div>');
+    // } else {
+    //     // 'Suspicious Images Content' data is not available, so hide the HTML block
+    //     $('.suspicious-images-content-heading').hide();
+    //     $('.suspicious-images-content').hide();
+    // }
 
-    // Display Suspicious Images Content
     if (result['Suspicious Images Content']) {
         // 'Suspicious Images Content' data is available, so display the HTML block
-        // $('.suspicious-images-content').html('<h2 class="lead" style="display: inline-block; margin-right: 10px;">Suspicious Images Content</h2><div class="suspicious-images-content">' + result['Suspicious Images Content'] + '</div>');
+    
+        // Assuming result['Suspicious Images Content'] is an array of sentences
+        const sentences = result['Suspicious Images Content'].map(sentence => {
+            // Extract the sentence from the string
+            // const startIndex = sentence.indexOf(':') + 1;
+            const extractedSentence = sentence.substring(startIndex).trim();
+            return extractedSentence;
+        });
+    
+        const sentencesHTML = sentences.map(sentence => `<p>${sentence}</p>`).join('');
+        $('.suspicious-images-content').html('<h2 class="lead" style="display: inline-block; margin-right: 10px;">Suspicious Images Content</h2><div class="suspicious-images-content">' + sentencesHTML + '</div>');
     } else {
         // 'Suspicious Images Content' data is not available, so hide the HTML block
         $('.suspicious-images-content-heading').hide();
         $('.suspicious-images-content').hide();
     }
 
-
-
-    // // Display Hyperlinks
-    // if (result.Hyperlinks) {
-    //     displayUrls(result.Hyperlinks);
-    // }
-
-    // const suspiciousImagesContent = result['Suspicious Images Content'].join('<br>');
-    // $('.suspicious-images-content').html(suspiciousImagesContent);
 
     $('#resultContainer').show();
 }

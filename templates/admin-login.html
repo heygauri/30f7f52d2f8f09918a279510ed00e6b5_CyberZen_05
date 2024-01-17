@@ -1,4 +1,4 @@
-<!-- feedback.html -->
+<!-- admin-login.html -->
 
 <!DOCTYPE html>
 <html lang="en">
@@ -26,20 +26,40 @@
             <a href="login.html">Admin Login</a>
         </div>
     </header>
-
-    <div class="container1 custom-container">
-        <h1 class="mb-4">Admin Login</h1>
-        <form id="loginForm">
+   
+    <!-- <div class="container1" style="display: flex; flex-direction: column; justify-content: center; align-items: center; height: 100vh;">
+        <img src="C:\Users\Payal\cyberzen\30f7f52d2f8f09918a279510ed00e6b5_CyberZen_05\images\policewoman.png" alt="Logo" style="max-width: 50%; height: 20%; margin-bottom: 20px;">
+        <h5 class="mb-4">Admin Login</h5>
+        <form id="loginForm" style=" flex-direction: column; align-items: center;">
             <label for="username">Username:</label>
-            <input type="text" id="username" name="username" required><br>
-
+            <input type="text" id="username" name="username" required><br><br>
+    
             <label for="password">Password:</label>
-            <input type="password" id="password" name="password" required><br>
-
-            <button type="submit" class="btn btn-primary">Login</button>
-            <button type="submit" class="btn btn-primary" id="clearButton">Clear</button>
+            <input type="password" id="password" name="password" required><br><br>
+    
+            <button type="submit" class="btn btn-primary" style="align-items: center;">Login</button>
+      
+      
+        <button type="button" class="btn btn-primary" id="clearButton"style="align-items: center;justify-content:center">Clear</button>
+    </form>
+    </div> -->
+    <div class="container1" style="display: flex; flex-direction: column; justify-content: center; align-items: center; height: 50vh; border: 1px solid black; padding: 15px;margin-top: 130px;">
+        <img src="/home/sumitra/opensource/heygauri/30f7f52d2f8f09918a279510ed00e6b5_CyberZen_05/images/didi.jpeg" alt="Logo" style="max-width: 50%; height: 20%; margin-bottom: 20px;">
+        <h5 class="mb-4">Admin Login</h5>
+        <form id="loginForm" style="flex-direction: column; align-items: center;">
+            <label for="username">Username:</label>
+            <input type="text" id="username" name="username" required><br><br>
+    
+            <label for="password">Password:</label>
+            <input type="password" id="password" name="password" required><br><br>
+            <div style="text-align: center;">
+            <button type="submit" class="btn btn-primary" style="align-items: center;">Login</button>
+            <button type="button" class="btn btn-primary" id="clearButton" style="align-items: center;">Clear</button>
+            </div>
         </form>
-    </div> 
+    </div>
+     
+    
     <div id="resultContainer" class="container2 mt-4" style="display: inline;">
         <h1>Successfully Logged in as Admin!</h1><br>
 
@@ -59,4 +79,3 @@
     <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs"></script>
     <script src="admin-login.js"></script></body>
 </html>
-

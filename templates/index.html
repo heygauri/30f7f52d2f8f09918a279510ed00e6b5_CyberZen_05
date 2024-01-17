@@ -24,23 +24,42 @@
             <a href="admin-login.html">Admin Login</a>
         </div>
     </header>
-
-    <div class="container1 custom-container">
-        <div class="horizontal-container">
-            <img class="background-image" src="/home/sumitra/opensource/heygauri/30f7f52d2f8f09918a279510ed00e6b5_CyberZen_05/images/nobackgroud-removebg.png" alt="Background Image">
-        </div>
+    <div style="margin-left: 90px;">
+        <div class="container1 custom-container">
+            <div class="horizontal-container">
+                <img class="background-image" src="/home/sumitra/opensource/heygauri/30f7f52d2f8f09918a279510ed00e6b5_CyberZen_05/images/nobackgroud-removebg.png" alt="Background Image">
+            </div>
+        
         <form id="urlForm">
             <div class="form-group">
                 <label for="urlInput">Enter URL:</label>
                 <input type="url" class="form-control" id="urlInput" placeholder="https://example.com" required>
                 <small id="urlHelp" class="form-text text-muted"></small>
             </div>
-            <button type="submit"  class="btn btn-primary" id="analyzeButton">Analyze</button>
+            <button type="submit" class="btn btn-primary" id="analyzeButton">Analyze</button>
             <input type="url" class="form-control" id="editInput" placeholder="Enter new URL" style="display: none;">
             <button type="submit" class="btn btn-primary" id="editButton">Edit</button>
         </form>
     </div>
-
+    
+    <br>
+    
+    <div class="plz" style="display: flex; justify-content: flex-end; align-items: center; height:250px; padding: 5px; margin-top: 20px; ">
+        <img src="/home/sumitra/opensource/heygauri/30f7f52d2f8f09918a279510ed00e6b5_CyberZen_05/images/1.jpeg" alt="Logo" style="height: 100%; margin-left: -250px;">
+        
+        <img src="/home/sumitra/opensource/heygauri/30f7f52d2f8f09918a279510ed00e6b5_CyberZen_05/images/2.jpeg" alt="Logo" style="height: 100%; margin-left: 30px;margin-right: 30px;">
+    
+        <img src="/home/sumitra/opensource/heygauri/30f7f52d2f8f09918a279510ed00e6b5_CyberZen_05/images/3.jpeg" alt="Logo" style="height: 100%; margin-right: -250px;">
+    </div>
+    
+   
+    </div>
+    <form>
+    <div>
+        <label for="urlInput">Enter URL:</label>
+        </div>
+        </form>
+    
     <div id="resultContainer" class="container2 mt-4" style="display: none;">
         <h1>Analysis Result</h1><br>
 
@@ -155,10 +174,6 @@
         
         </div><br>
 
-        <!-- <div class="urls-container">
-            <h2 class="urls-container-heading">Extracted URLs</h2>
-            <p class="url-item"></p>
-        </div> -->
         <div> 
             <h2 class="urls-container-heading" style="display: inline-block; margin-right: 10px;">Exracted URLs's</h2>
             <p class="urls-container"></p> 
@@ -182,4 +197,3 @@
     <script src="main.js"></script>
 </body>
 </html>
-
