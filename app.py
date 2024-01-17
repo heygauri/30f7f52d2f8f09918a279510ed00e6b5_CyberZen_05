@@ -841,11 +841,11 @@ def analyze():
         
         # tensorflow NLP model integration
         # Unzip the folder
-        zip_path = 'model_6_savedmodel.zip'
+        # zip_path = 'model_6_savedmodel.zip'
         extract_path = 'model_6_savedmodel'
 
-        with zipfile.ZipFile(zip_path, 'r') as zip_ref:
-            zip_ref.extractall(extract_path)
+        # with zipfile.ZipFile(zip_path, 'r') as zip_ref:
+        #     zip_ref.extractall(extract_path)
 
         # Load the model
         loaded_model = tf.keras.models.load_model(extract_path)
