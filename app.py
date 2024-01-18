@@ -57,29 +57,29 @@ import pymysql
 # mysql_connection = mysql.connector.connect(**db_config)
 
 from flask import Flask, render_template, request, redirect, url_for, session
-from flask_sqlalchemy import SQLAlchemy
+# from flask_sqlalchemy import SQLAlchemy
 
 import secrets
 
 app = Flask(__name__)
 CORS(app)
 
-# Configure MySQL
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://sumitra:Sumitra@2@localhost/website_analyzer'  # Replace with your MySQL database details
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+# # Configure MySQL
+# app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://sumitra:Sumitra@2@localhost/website_analyzer'  # Replace with your MySQL database details
+# app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
-# Initialize MySQL
-db = SQLAlchemy(app)
+# # Initialize MySQL
+# db = SQLAlchemy(app)
 
-# Your other imports and code go here
+# # Your other imports and code go here
 
-if __name__ == '__main__':
-    app.run(debug=True)
-# from flask_mysqldb import MySQL
+# if __name__ == '__main__':
+#     app.run(debug=True)
+# # from flask_mysqldb import MySQL
 
 
-# app = Flask(__name__)
-# CORS(app)
+# # app = Flask(__name__)
+# # CORS(app)
 
 # # MySQL Configuration
 # app.config['MYSQL_HOST'] = 'localhost'
