@@ -803,7 +803,7 @@ def suspicious():
         # Display the list of suspicious images or the message if no images are suspicious
             if not suspicious_images_text:
                 suspicious_images_text.append(f"No image text found to be suspicious.")
-                suspicious_images_text.append(f"")
+                prediction_probability.append(f"")
                 print("No image text is suspicious.")
             else:
                 for suspicious_image in suspicious_images_text:
