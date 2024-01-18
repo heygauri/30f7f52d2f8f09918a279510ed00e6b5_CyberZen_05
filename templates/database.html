@@ -1,11 +1,12 @@
-<!-- admin-login.html -->
+
+<!-- database.html -->
 
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Feedback System</title>
+    <title>Database</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="styles.css">
     <style>
@@ -30,28 +31,24 @@
    
     <div class="container1" style="display: flex; flex-direction: column; justify-content: center; align-items: center; height: 50vh; border: 1px solid black; padding: 15px;margin-top: 130px;">
         <img src="/home/sumitra/opensource/heygauri/30f7f52d2f8f09918a279510ed00e6b5_CyberZen_05/images/didi.jpeg" alt="Logo" style="max-width: 50%; height: 20%; margin-bottom: 20px;">
-        <h5 class="mb-4">Admin Login</h5>
-        <form id="loginForm" style="flex-direction: column; align-items: center;">
-            <label for="username">Username:</label>
-            <input type="text" id="username" name="username" required><br><br>
+        <h2>Welcome to the Admin Page</h2>
     
-            <label for="password">Password:</label>
-            <input type="password" id="password" name="password" required><br><br>
-            <div style="text-align: center;">
-            <button type="submit" class="btn btn-primary" style="align-items: center;">Login</button>
-            <button type="button" class="btn btn-primary" id="clearButton" style="align-items: center;">Clear</button>
-            </div>
-        </form>
+        <h2>Options:</h2>
+        
+        <ul>
+            <li><a href="{{ url_for('show_table', table_name='web_analysis') }}">Show Web Analysis Table</a></li>
+            <li><a href="{{ url_for('show_table', table_name='users') }}">Show Users Table</a></li>
+            <li><a href="{{ url_for('show_table', table_name='feedback') }}">Show Feedback Table</a></li>
+        </ul>
     </div>
-     
-    
-    <div id="resultContainer" class="container2 mt-4" style="display: inline;">
+
+    <!-- <div id="resultContainer" class="container2 mt-4" style="display: inline;">
         <h1>Successfully Logged in as Admin!</h1><br>
 
         <button type="submit" class="btn btn-secondry" id="">Website Analysis Data</button>
         <button type="submit" class="btn btn-secondry" id="">Feedback Data</button>
         <button type="submit" class="btn btn-secondry" id="">Admin users Data</button>
-    </div>      
+    </div>   -->
 
     <footer>
         <div class="footer-links">

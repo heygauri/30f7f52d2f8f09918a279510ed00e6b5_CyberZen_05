@@ -38,6 +38,7 @@ from bs4 import BeautifulSoup
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 import easyocr
+import pymysql
 
 # import mysql.connector
 
@@ -56,18 +57,35 @@ import easyocr
 # mysql_connection = mysql.connector.connect(**db_config)
 
 from flask import Flask, render_template, request, redirect, url_for, session
-# from flask_mysqldb import MySQL
+from flask_sqlalchemy import SQLAlchemy
+
 import secrets
 
 app = Flask(__name__)
 CORS(app)
+
+# Configure MySQL
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://sumitra:Sumitra@2@localhost/website_analyzer'  # Replace with your MySQL database details
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
+# Initialize MySQL
+db = SQLAlchemy(app)
+
+# Your other imports and code go here
+
+if __name__ == '__main__':
+    app.run(debug=True)
+# from flask_mysqldb import MySQL
+
+
+# app = Flask(__name__)
+# CORS(app)
 
 # # MySQL Configuration
 # app.config['MYSQL_HOST'] = 'localhost'
 # app.config['MYSQL_USER'] = 'sumitra'
 # app.config['MYSQL_PASSWORD'] = 'Sumitra@2'
 # app.config['MYSQL_DB'] = 'website_analyzer'
-# app.config['MYSQL_CURSORCLASS'] = 'DictCursor'
 
 # mysql = MySQL(app)
 
@@ -79,6 +97,8 @@ CORS(app)
 
 import tensorflow as tf
 print("Num GPUs Available: ", len(tf.config.experimental.list_physical_devices('GPU')))
+
+from flask import render_template
 
 
 # Login route
@@ -980,6 +1000,17 @@ def index():
     return render_template('index.html')
 
 # <--------------------------------------------MYSQL-DATABASE--------------------------------------------------------------->
+
+# Add this route to your Flask app
+@app.route('/show_table/<table_name>')
+def show_table(table_name):
+    # Example: Fetch data from the specified table
+    cur = mysql.connection.cursor()
+    cur.execute(f"SELECT * FROM {table_name}")
+    data = cur.fetchall()
+    cur.close()
+
+    return render_template('show_table.html', table_name=table_name, data=data)
 
 # Save feedback
 @app.route('/save-feedback', methods=['POST'])
