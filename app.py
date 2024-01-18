@@ -18,6 +18,9 @@ import whois
 import json
 import ssl
 import re
+import os
+os.environ['CUDA_VISIBLE_DEVICES'] = ''
+
 
 import tensorflow as tf
 import zipfile
@@ -736,6 +739,68 @@ def get_certificate_information(url):
         # Return None to indicate an error occurred
         print('Certificate information retrieval error')
         return {}
+
+import requests
+from bs4 import BeautifulSoup
+import re
+
+def extract_phone_numbers(url):
+    try:
+        # Fetch the web content
+        response = requests.get(url)
+        response.raise_for_status()
+
+        # Parse HTML content
+        soup = BeautifulSoup(response.text, 'html.parser')
+
+        # Find phone numbers using the regex pattern
+        matches = phone_number_pattern.findall(str(soup))
+
+        # Filter based on length, additional criteria, and exclude non-digit characters
+        valid_phone_numbers = [
+            match for match in matches
+            if 8 <= len(match) <= 15
+            and any(char.isdigit() for char in match)
+            and not any(char.isalpha() for char in match)
+            and '.' not in match
+        ]
+
+        return valid_phone_numbers
+
+    except requests.RequestException as req_ex:
+        print(f"Error with the request to {url}: {req_ex}")
+        return []
+
+    except Exception as ex:
+        print(f"Error processing {url}: {ex}")
+        return []
+
+def extract_phone_numbers_from_urls(urls):
+    all_phone_numbers = []
+
+    for url in urls:
+        phone_numbers = extract_phone_numbers(url)
+        all_phone_numbers.extend(phone_numbers)
+
+    # Remove duplicates
+    unique_phone_numbers = list(set(all_phone_numbers))
+
+    return unique_phone_numbers
+
+
+@app.route('/contacts', methods=['POST'])
+def contacts():
+    try:
+        # Retrieving all hyperlinks present on the url
+        target_website_url = request.form['url']
+        cont = extract_phone_numbers(target_website_url)
+        contacts_result = {
+            'ContactNumbers': cont
+        }
+        print(contacts_result)
+        return jsonify(contacts_result)
+    except Exception as e:
+        return jsonify({'error': str(e)})
 
 @app.route('/hyperlinks', methods=['POST'])
 def hyperlinks():
