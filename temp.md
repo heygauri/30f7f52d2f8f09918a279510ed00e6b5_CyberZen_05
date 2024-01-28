@@ -1,35 +1,54 @@
-Certainly! Below is a template for a README documentation for your GitHub project. Feel free to customize it based on the specifics of your project.
+# Website Analyzer - AI/ML Fraud Detection System
 
-markdown
-Copy code
-# Project Name
+## Project Overview
 
-Design a Automated AI/ML System for Detecting and Mitigating Online Fraud
+Welcome to the Website Analyzer project! This initiative addresses the pressing need for an Automated AI/ML System to Detect and Mitigate Online Fraud. The core objective is to create and implement an AI/ML-based system that can autonomously analyze and categorize online content, distinguishing between authentic and fake/fraudulent websites, advertisements, and customer care numbers.
 
-## Description
+## Project Name
 
-A web application for analyzing websites. It checks the legitimacy of the domain, validates SSL certificates, and uses machine learning to predict website legitimacy based on various features and the image content present on the websites.
+**Website Analyzer**
+
+## Project Description
+
+"Website Analyzer" is a sophisticated web application designed for analyzing the legitimacy of given websites. The system employs various techniques, including domain legitimacy checks, SSL certificate validation, and a powerful machine learning model known as Url Analyzer. This model predicts website legitimacy based on 17 key features. The platform goes beyond traditional analysis by incorporating two additional subsystems: Extracted URLs - Hyperlink Fetcher and NLP Content Analysis System.
+
+### Subsystems
+
+1. **Extracted URLs - Hyperlink Fetcher:**
+   - This subsystem serves as a hyperlink fetcher, extracting all hyperlinks present on the input URL's page. This feature provides users with valuable insights into the interconnected web of URLs associated with a given website.
+
+2. **NLP Content Analysis System:**
+   - The NLP Content Analysis System delves into the content of websites, extracting text from images using OCR (Optical Character Recognition). This NLP-driven analysis categorizes content as legitimate or potentially spammy, adding an extra layer of scrutiny to the evaluation process.
 
 ## Features
 
-- *Domain Legitimacy Check:* Analyzes the expiration date of the domain to determine its legitimacy.
+- **Domain Legitimacy Check:**
+  - Analyzes the expiration date of the domain to determine its legitimacy.
 
-- *SSL Certificate Validation:* Checks the validity of the SSL certificate associated with the analyzed website.
+- **SSL Certificate Validation:**
+  - Checks the validity of the SSL certificate associated with the analyzed website.
 
-- *HTTPS Detection:* Determines whether the website uses HTTPS or HTTP.
+- **HTTPS Detection:**
+  - Determines whether the website uses HTTP or HTTPS.
 
-- *Machine Learning Prediction:* Leverages 16 key features to predict various aspects of the analyzed website, providing insights into potential security risks and overall legitimacy.
+- **Machine Learning Prediction:**
+  - Leverages 17 key features to predict various aspects of the analyzed website, providing insights into potential security risks and overall legitimacy.
 
-- *Images Content Analysis:* Utilizing NLP and image recognition methods to assess the authenticity and accuracy of ad content and the images present on the website.
+- **Images Content Analysis:**
+  - Utilizes NLP and image recognition methods to assess the authenticity and accuracy of ad content and images on the website.
 
-- *Customer care number database Creation:* Implementing web scraping to build a database of fraudulent customer care numbers and using a REST API to verify incoming numbers for potential scams.
+- **Customer Care Number Database Creation:**
+  - Implements web scraping to build a database of fraudulent customer care numbers and uses a REST API to verify incoming numbers for potential scams. (Work in process)
 
-- *Feedback Form:*  Feedback to enhance the extension’s accuracy and adapt to evolving fraudulent tactics.
+- **Feedback Form:**
+  - Provides a feedback mechanism to enhance the extension’s accuracy and adapt to evolving fraudulent tactics.
 
 ## Prerequisites
 
-- [Python](https://www.python.org/) installed
-- [Flask](https://flask.palletsprojects.com/) web framework
+Ensure you have the following prerequisites installed:
+
+- [Python](https://www.python.org/)
+- [Flask](https://flask.palletsprojects.com/)
 - [TensorFlow.js](https://www.tensorflow.org/js) for machine learning predictions
 - [Selenium](https://www.selenium.dev/) for web scraping
 - [Beautiful Soup](https://www.crummy.com/software/BeautifulSoup/) for HTML parsing
@@ -39,44 +58,46 @@ A web application for analyzing websites. It checks the legitimacy of the domain
 
 1. Clone the repository:
 
-   ```bash
+   ```
    git clone https://github.com/heygauri/30f7f52d2f8f09918a279510ed00e6b5_CyberZen_05
-Install dependencies:
+   ```
 
-bash
-Copy code
-pip install -r requirements.txt
-Run the application:
+2. Install dependencies:
 
-bash
-Copy code
-python app.py
-Open the application in your web browser: http://localhost:5000/
+   ```
+   pip install -r requirements.txt
+   ```
 
-Usage
-Enter the URL of the website you want to analyze in the provided user interface.
+3. Run the application:
 
-Click the "Analyze" button.
+   ```
+   python app.py
+   ```
 
-Review the analysis results, including domain legitimacy, SSL information, HTTPS usage, and machine learning predictions.
+4. Open the application in your web browser: [http://localhost:5000/](http://localhost:5000/)
 
-## Limitations 
-- Our process is currently time-consuming due to the utilization of the Image-to-Text machine learning model. We are exploring avenues to optimize this model, enhancing its efficiency and contributing to a faster and more streamlined website authenticity tracking system.
+5. Enter the URL of the website you want to analyze in the provided user interface.
 
-- The comprehensive scanning of all hyperlinks on the entire website is time-consuming, primarily due to resource limitations. While not every link has been checked yet, the extracted hyperlinks enable us to assess the presence of potential phishing URLs within legitimate websites.
+6. Click the "Analyze" button.
 
-Contributing
-Contributions are welcome! Please follow our Contribution Guidelines before submitting pull requests.
+7. Review the analysis results, including domain legitimacy, SSL information, HTTPS usage, and machine learning predictions.
 
-License
-This project is licensed under the MIT License.
+## Future Work
 
-Acknowledgments
-Mention any libraries or tools that you are using and are thankful for.
-Contact
-For issues or questions, please create an issue.
+1. Develop a browser extension integrating URL analyzer for real-time fraudulent URL detection for end users.
+2. Scale web analyzer system by implementing recursive hyperlink analysis for input URLs.
+3. Advance to multilingual OCRs, followed by NLP models.
 
-javascript
-Copy code
+## Limitations
 
-Replace placeholders like your-username, Project Name, and Description with your actual information. Additionally, create separate CONTRIBUTING.md and LICENSE files if needed, and adjust the links accordingly.
+1. Utilizing TensorFlow in NLP model with GPU preference, currently restricted to CPUs due to resource limitations.
+2. Url_Analyzer Model accuracy is 77%.
+3. Ongoing efforts to improve efficiency in OCR processing.
+   - The comprehensive scanning of all hyperlinks on the entire website is time-consuming, primarily due to resource limitations. While not every link has been checked yet, the extracted hyperlinks enable us to assess the presence of potential phishing URLs within legitimate websites.
+
+## Contributing
+
+Contributions are welcome! Please follow our [Contribution Guidelines](CONTRIBUTING.md) before submitting pull requests.
+
+## License
+This project is licensed under the MIT License. Feel free to use, modify, and distribute the code as needed.
