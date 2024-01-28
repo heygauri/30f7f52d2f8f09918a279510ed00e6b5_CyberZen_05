@@ -68,7 +68,4 @@ Incorporating an HTML form for user feedback to enhance the extension’s accura
 2. **Updating User Interface for Feedback Integration:**
    - Enhancing the user interface to facilitate user feedback and improve system performance.
      
----
-
-**Note:** This README provides an overview of the problem statement, proposed solution, technologies used, team members, and a placeholder for graphical representation and schedule. Feel free to customize it according to your specific project details.
 
